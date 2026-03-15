@@ -143,9 +143,9 @@ def call(BuildArgsModel buildArgs) {
             }
             stage('制作镜像') {
                 steps {
-                    // 登录Harbor镜像 (用于推送镜像到Harbor)
-                    withCredentials([usernamePassword(credentialsId: "${buildArgs.harborAuth}", passwordVariable: 'password', usernameVariable: 'username')]) {
-                        sh "docker login -u ${username} -p ${password} ${buildArgs.harborUrl}"
+                    // 登录Registry服务器 (用于推送镜像到Registry服务器)
+                    withCredentials([usernamePassword(credentialsId: "${buildArgs.registryAuth}", passwordVariable: 'password', usernameVariable: 'username')]) {
+                        sh "docker login -u ${username} -p ${password} ${buildArgs.registryUrl}"
                     }
 
                     // 提前拉取无法在构建的时候拉取的镜像
@@ -166,7 +166,7 @@ def call(BuildArgsModel buildArgs) {
                         // 退出私服镜像仓库
                         sh """
                             rm -rf ./${env.JOB_NAME}/${buildArgs.targetPath}
-                            docker logout ${buildArgs.harborUrl}
+                            docker logout ${buildArgs.registryUrl}
                         """
                     }
                 }
@@ -174,8 +174,8 @@ def call(BuildArgsModel buildArgs) {
             stage('部署应用') {
                 steps {
                     script {
-                        if (buildArgs.harborPullLogin) {
-                            withCredentials([usernamePassword(credentialsId: "${buildArgs.harborAuth}", passwordVariable: 'password', usernameVariable: 'username')]) {
+                        if (buildArgs.imagePullLogin) {
+                            withCredentials([usernamePassword(credentialsId: "${buildArgs.registryAuth}", passwordVariable: 'password', usernameVariable: 'username')]) {
                                 try {
                                     globalVars['deployCommand'] = getDeployDockerCommand(
                                             codeProjectTag: globalVars['CODE_PROJECT_TAG'],

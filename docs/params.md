@@ -39,7 +39,7 @@
 |   [buildCommand](#buildCommand)   |     编译打包命令     | `String` |        ✅         |        ✅         |        ✅         |
 |     [targetPath](#targetPath)     | 构建产物（打包输出）所在路径 | `String` |        ✅         |        ✅         |        ✅         |
 
-### 4. 编译打包配置
+### 4. 运行部署配置
 
 |              标识               |    名称    |     类型      | javaPublishMaven | javaDeployDocker | nodeDeployDocker |
 |:-----------------------------:|:--------:|:-----------:|:----------------:|:----------------:|:----------------:|
@@ -51,7 +51,7 @@
 |   [runNetwork](#runNetwork)   | 容器运行网络模式 |  `String`   |        ❌         |        ✅         |        ✅         |
 |   [runRestart](#runRestart)   |  容器重启策略  |  `String`   |        ❌         |        ✅         |        ✅         |
 
-### 5. 编译打包配置
+### 5. 构建选项配置
 
 |                       标识                        |    名称    |    类型    | javaPublishMaven | javaDeployDocker | nodeDeployDocker |
 |:-----------------------------------------------:|:--------:|:--------:|:----------------:|:----------------:|:----------------:|
@@ -63,18 +63,18 @@
 
 ### 6. 凭证信息
 
-|             标识              |      名称      |    类型    | javaPublishMaven | javaDeployDocker | nodeDeployDocker |
-|:---------------------------:|:------------:|:--------:|:----------------:|:----------------:|:----------------:|
-| [gitCodeAuth](#gitCodeAuth) |  git代码仓库凭证   | `String` |        ✅         |        ✅         |        ✅         |
-|  [harborAuth](#harborAuth)  | Harbor镜像仓库凭证 | `String` |        ✅         |        ✅         |        ✅         |
+|              标识               |      名称       |    类型    | javaPublishMaven | javaDeployDocker | nodeDeployDocker |
+|:-----------------------------:|:-------------:|:--------:|:----------------:|:----------------:|:----------------:|
+|  [gitCodeAuth](#gitCodeAuth)  |   git代码仓库凭证   | `String` |        ✅         |        ✅         |        ✅         |
+| [registryAuth](#registryAuth) | Registry服务器凭证 | `String` |        ✅         |        ✅         |        ✅         |
 
-### 7. Harbor私服配置
+### 7. 镜像Registry配置
 
 |                 标识                  |     名称     |       类型       | javaPublishMaven | javaDeployDocker | nodeDeployDocker |
 |:-----------------------------------:|:----------:|:--------------:|:----------------:|:----------------:|:----------------:|
-|       [harborUrl](#harborUrl)       |    私服地址    |    `String`    |        ❌         |        ✅         |        ✅         |
-| [harborPullLogin](#harborPullLogin) | 私服拉取是否需要登录 |   `Boolean`    |        ❌         |        ✅         |        ✅         |
-|   [harborProject](#harborProject)   |    私服项目    |    `String`    |        ❌         |        ✅         |        ✅         |
+|     [registryUrl](#registryUrl)     | Registry地址 |    `String`    |        ❌         |        ✅         |        ✅         |
+|  [imagePullLogin](#imagePullLogin)  | 拉取镜像是否需要登录 |   `Boolean`    |        ❌         |        ✅         |        ✅         |
+| [registryProject](#registryProject) | Registry项目 |    `String`    |        ❌         |        ✅         |        ✅         |
 |       [baseImage](#baseImage)       |    基础镜像    | `List<String>` |        ❌         |        ✅         |        ✅         |
 
 
@@ -398,43 +398,41 @@
 
 > git代码仓库凭证，用于拉取待构建的代码仓库、pipeline脚本仓库
 
-### <a id="harborAuth">`harborAuth`</a>
+### <a id="registryAuth">`registryAuth`</a>
 
 - 类型：`String`
 - 默认值：无
 - 必填：`是`
 - 支持模板：`javaDeployDocker` `nodeDeployDocker`
 
-> Harbor镜像仓库凭证，用于拉取、推送镜像
+> Registry服务器凭证，用于登录后拉取、推送镜像
 
-### <a id="harborUrl">`harborUrl`</a>
+### <a id="registryUrl">`registryUrl`</a>
 
 - 类型：`String`
 - 默认值：无
 - 必填：`是`
 - 支持模板：`javaDeployDocker` `nodeDeployDocker`
 
-> Harbor私服地址，用于登录私服、推送镜像
+> Docker镜像Registry服务器地址，用于登录Registry服务器、推送镜像
 
-### <a id="harborPullLogin">`harborPullLogin`</a>
+### <a id="imagePullLogin">`imagePullLogin`</a>
 
 - 类型：`Boolean`
 - 默认值：`false`
 - 必填：`否`
 - 支持模板：`javaDeployDocker` `nodeDeployDocker`
 
-> Harbor私服拉取是否需要登录
+> 拉取镜像是否需要登录
 
-### <a id="harborProject">`harborProject`</a>
+### <a id="registryProject">`registryProject`</a>
 
 - 类型：`String`
 - 默认值：无
 - 必填：`是`
 - 支持模板：`javaDeployDocker` `nodeDeployDocker`
 
-> Harbor私服项目，用于推送镜像到私服
-
-> Harbor私服拉取是否需要登录
+> Registry服务器项目，用于推送镜像到Registry项目
 
 ### <a id="baseImage">`baseImage`</a>
 

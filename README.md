@@ -57,11 +57,11 @@
 
 ### 2.1 支持模板
 
-| 标题             | 模板使用方法                              | 步骤阶段说明(`[]`：可选阶段/步骤)                                 |
-|:---------------|:------------------------------------|:-----------------------------------------------------|
-| Java 发布私仓      | `SiweiteCI.javaPublishMaven(args)`  | [清理缓存]→[仓库合并]→项目编译→制作产物→[发送通知]                       |
-| Java Docker部署  | `SiweiteCI.javaDeployDocker(args)`  | [清理缓存]→[仓库合并]→项目编译→覆盖配置→[制作产物]→制作镜像→推送私服→部署容器→[发送通知] |
-| Node Docker部署  | `SiweiteCI.nodeDeployDocker(args)`  | [清理缓存]→[仓库合并]→项目编译→覆盖配置→[制作产物]→制作镜像→推送私服→部署容器→[发送通知] |
+| 标题            | 模板使用方法                              | 阶段/步骤说明(`[]`：可选、`<>`：必选、`{}`：选项必选)                                 |
+|:--------------|:------------------------------------|:-------------------------------------------------------------------|
+| Java 发布私仓     | `SiweiteCI.javaPublishMaven(args)`  | [清理缓存]→[仓库合并]→<项目编译>→<制作产物>→[发送通知]                                 |
+| Java Docker部署 | `SiweiteCI.javaDeployDocker(args)`  | [清理缓存]→[仓库合并]→<项目编译>→<覆盖配置>→[制作产物]→<制作镜像>→{推送私服\|传输镜像}→部署容器→[发送通知] |
+| Node Docker部署 | `SiweiteCI.nodeDeployDocker(args)`  | [清理缓存]→[仓库合并]→<项目编译>→<覆盖配置>→[制作产物]→<制作镜像>→{推送私服\|传输镜像}→部署容器→[发送通知] |
 
 
 ### 2.2 流水线示例
@@ -138,15 +138,15 @@ def args = [
     // 运行端口，容器内部访问端口，程序启动占用端口
     runPort: 30000,
 
-    // Harbor私服地址，用于登录私服、推送镜像
-    harborUrl: '192.168.2.110:5000',
-    // Harbor私服项目，用于推送镜像到私服
-    harborProject: 'siweite',
+    // Docker镜像Registry服务器地址，用于登录Registry服务器、推送镜像
+    registryUrl: '192.168.2.110:5000',
+    // Registry服务器项目，用于推送镜像到Registry项目
+    registryProject: 'siweite',
 
     // git代码仓库凭证，用于拉取待构建的代码仓库
     gitCodeAuth: '054e6886-1aec-4b81-b28b-fb033d942153',
-    // Harbor镜像仓库凭证，用于拉取、推送镜像
-    harborAuth: '789f8b55-191c-42bb-a2e5-23bec43f16ed',
+    // Registry服务器凭证，用于登录后拉取、推送镜像
+    registryAuth: '789f8b55-191c-42bb-a2e5-23bec43f16ed',
 ]
 
 SiweiteCI.javaDeployDocker(args)
@@ -194,15 +194,15 @@ def args = [
     // 运行环境变量key，value= DEPLOY_ENV配置的值
     runEnvKey: 'solon.env',
 
-    // Harbor私服地址，用于登录私服、推送镜像
-    harborUrl: '192.168.2.110:5000',
-    // Harbor私服项目，用于推送镜像到私服
-    harborProject: 'siweite',
+    // Docker镜像Registry服务器地址，用于登录Registry服务器、推送镜像
+    registryUrl: '192.168.2.110:5000',
+    // Registry服务器项目，用于推送镜像到Registry项目
+    registryProject: 'siweite',
 
     // git代码仓库凭证，用于拉取待构建的代码仓库
     gitCodeAuth: '054e6886-1aec-4b81-b28b-fb033d942153',
-    // Harbor镜像仓库凭证，用于拉取、推送镜像
-    harborAuth: '789f8b55-191c-42bb-a2e5-23bec43f16ed',
+    // Registry服务器凭证，用于登录后拉取、推送镜像
+    registryAuth: '789f8b55-191c-42bb-a2e5-23bec43f16ed',
 ]
 
 SiweiteCI.javaDeployDocker(args)
@@ -246,15 +246,15 @@ def args = [
     // 部署端口，对外可访问端口，非docker内部端口
     deployPort: 8000,
 
-    // Harbor私服地址，用于登录私服、推送镜像
-    harborUrl: '192.168.2.110:5000',
-    // Harbor私服项目，用于推送镜像到私服
-    harborProject: 'siweite',
+    // Docker镜像Registry服务器地址，用于登录Registry服务器、推送镜像
+    registryUrl: '192.168.2.110:5000',
+    // Registry服务器项目，用于推送镜像到Registry项目
+    registryProject: 'siweite',
 
     // git代码仓库凭证，用于拉取待构建的代码仓库
     gitCodeAuth: '054e6886-1aec-4b81-b28b-fb033d942153',
-    // Harbor镜像仓库凭证，用于拉取、推送镜像
-    harborAuth: '789f8b55-191c-42bb-a2e5-23bec43f16ed',
+    // Registry服务器凭证，用于登录后拉取、推送镜像
+    registryAuth: '789f8b55-191c-42bb-a2e5-23bec43f16ed',
 
 ]
 
@@ -269,8 +269,8 @@ SiweiteCI.nodeDeployDocker(args)
 
 - [x] 支持`Java Maven`发布私仓
 - [ ] 支持`Java Maven`远程推送`jar`，命令启动部署
-- [x] 支持`Java Maven`远程推送`Harbor`，使用私仓`Dokcer`容器部署
-- [x] 支持`Node`远程推送`Harbor`私仓，使用`Dokcer`容器部署
+- [x] 支持`Java Maven`远程推送`Registry`服务器（例如：`Harbor`），使用私仓`Dokcer`容器部署
+- [x] 支持`Node`远程推送`Registry`服务器（例如：`Harbor`）私仓，使用`Dokcer`容器部署
 - [ ] 支持`Node`远程推送`dist`，命令启动部署
 - [ ] 远程`Docker`容器部署，支持不用推送私仓
 - [x] 支持项目环境配置开发运维分离
