@@ -243,6 +243,7 @@ SiweiteCI.nodeDeployDocker(args)
 ### 2.3 快速开始
 
 [📘使用文档](./docs/start.md)
+[📙示例项目](https://gitee.com/siweite/siweite-sample-pipeline)
 
 ## 三 后续计划
 
