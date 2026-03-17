@@ -69,7 +69,7 @@
 - Java发布私仓流水线配置
 
 ```groovy
-@Library('jenkinsci-siweite-library@0.3.1') _
+@Library('jenkinsci-siweite-library@0.4.0') _
 
 // 控制参数
 def args = [
@@ -101,7 +101,7 @@ SiweiteCI.javaPublishMaven(args)
 - SpringBoot项目流水线配置
 
 ```groovy
-@Library('jenkinsci-siweite-library@0.3.1') _
+@Library('jenkinsci-siweite-library@0.4.0') _
 
 // 控制参数
 def args = [
@@ -138,15 +138,8 @@ def args = [
     // 运行端口，容器内部访问端口，程序启动占用端口
     runPort: 30000,
 
-    // Docker镜像Registry服务器地址，用于登录Registry服务器、推送镜像
-    registryUrl: '192.168.2.110:5000',
-    // Registry服务器项目，用于推送镜像到Registry项目
-    registryProject: 'siweite',
-
     // git代码仓库凭证，用于拉取待构建的代码仓库
     gitCodeAuth: '054e6886-1aec-4b81-b28b-fb033d942153',
-    // Registry服务器凭证，用于登录后拉取、推送镜像
-    registryAuth: '789f8b55-191c-42bb-a2e5-23bec43f16ed',
 ]
 
 SiweiteCI.javaDeployDocker(args)
@@ -155,7 +148,7 @@ SiweiteCI.javaDeployDocker(args)
 - Solon项目流水线配置
 
 ```groovy
-@Library('jenkinsci-siweite-library@0.3.1') _
+@Library('jenkinsci-siweite-library@0.4.0') _
 
 // 控制参数
 def args = [
@@ -194,15 +187,8 @@ def args = [
     // 运行环境变量key，value= DEPLOY_ENV配置的值
     runEnvKey: 'solon.env',
 
-    // Docker镜像Registry服务器地址，用于登录Registry服务器、推送镜像
-    registryUrl: '192.168.2.110:5000',
-    // Registry服务器项目，用于推送镜像到Registry项目
-    registryProject: 'siweite',
-
     // git代码仓库凭证，用于拉取待构建的代码仓库
     gitCodeAuth: '054e6886-1aec-4b81-b28b-fb033d942153',
-    // Registry服务器凭证，用于登录后拉取、推送镜像
-    registryAuth: '789f8b55-191c-42bb-a2e5-23bec43f16ed',
 ]
 
 SiweiteCI.javaDeployDocker(args)
@@ -211,7 +197,7 @@ SiweiteCI.javaDeployDocker(args)
 - Node项目流水线配置
 
 ```groovy
-@Library('jenkinsci-siweite-library@0.3.1') _
+@Library('jenkinsci-siweite-library@0.4.0') _
 
 // 控制参数
 def args = [
@@ -246,15 +232,8 @@ def args = [
     // 部署端口，对外可访问端口，非docker内部端口
     deployPort: 8000,
 
-    // Docker镜像Registry服务器地址，用于登录Registry服务器、推送镜像
-    registryUrl: '192.168.2.110:5000',
-    // Registry服务器项目，用于推送镜像到Registry项目
-    registryProject: 'siweite',
-
     // git代码仓库凭证，用于拉取待构建的代码仓库
     gitCodeAuth: '054e6886-1aec-4b81-b28b-fb033d942153',
-    // Registry服务器凭证，用于登录后拉取、推送镜像
-    registryAuth: '789f8b55-191c-42bb-a2e5-23bec43f16ed',
 
 ]
 
@@ -272,7 +251,7 @@ SiweiteCI.nodeDeployDocker(args)
 - [x] 支持`Java Maven`远程推送`Registry`服务器（例如：`Harbor`），使用私仓`Dokcer`容器部署
 - [x] 支持`Node`远程推送`Registry`服务器（例如：`Harbor`）私仓，使用`Dokcer`容器部署
 - [ ] 支持`Node`远程推送`dist`，命令启动部署
-- [ ] 远程`Docker`容器部署，支持不用推送私仓
+- [x] 远程`Docker`容器部署，支持不用推送私仓
 - [x] 支持项目环境配置开发运维分离
 - [x] 支持自定义`Docker`启动参数（如：映射端口、网络模式、自启策略、环境变量等）
 - [x] 支持多个子代码仓库整合到主代码仓库进行构建

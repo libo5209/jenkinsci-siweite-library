@@ -70,12 +70,14 @@
 
 ### 7. 镜像Registry配置
 
-|                 标识                  |     名称     |       类型       | javaPublishMaven | javaDeployDocker | nodeDeployDocker |
-|:-----------------------------------:|:----------:|:--------------:|:----------------:|:----------------:|:----------------:|
-|     [registryUrl](#registryUrl)     | Registry地址 |    `String`    |        ❌         |        ✅         |        ✅         |
-|  [imagePullLogin](#imagePullLogin)  | 拉取镜像是否需要登录 |   `Boolean`    |        ❌         |        ✅         |        ✅         |
-| [registryProject](#registryProject) | Registry项目 |    `String`    |        ❌         |        ✅         |        ✅         |
-|       [baseImage](#baseImage)       |    基础镜像    | `List<String>` |        ❌         |        ✅         |        ✅         |
+|                   标识                    |         名称         |       类型       | javaPublishMaven | javaDeployDocker | nodeDeployDocker |
+|:---------------------------------------:|:------------------:|:--------------:|:----------------:|:----------------:|:----------------:|
+| [imagePushRegistry](#imagePushRegistry) | 是否推送镜像到Registry服务器 |   `Boolean`    |        ❌         |        ✅         |        ✅         |
+|       [registryUrl](#registryUrl)       |     Registry地址     |    `String`    |        ❌         |        ✅         |        ✅         |
+|    [imagePullLogin](#imagePullLogin)    |     拉取镜像是否需要登录     |   `Boolean`    |        ❌         |        ✅         |        ✅         |
+|   [registryProject](#registryProject)   |     Registry项目     |    `String`    |        ❌         |        ✅         |        ✅         |
+| [imageTempSavePath](#imageTempSavePath) |      镜像临时保存路径      |    `String`    |        ❌         |        ✅         |        ✅         |
+|         [baseImage](#baseImage)         |        基础镜像        | `List<String>` |        ❌         |        ✅         |        ✅         |
 
 
 ### 8. 通知配置
@@ -402,19 +404,38 @@
 
 - 类型：`String`
 - 默认值：无
-- 必填：`是`
+- 必填：`否`
+  - `imagePushRegistry`=`true`：`是`
+  - `imagePullLogin`=`true`：`是`
 - 支持模板：`javaDeployDocker` `nodeDeployDocker`
 
-> Registry服务器凭证，用于登录后拉取、推送镜像
+> Registry服务器（例如：`Harbor`）凭证，用于登录后拉取、推送镜像
+
+### <a id="imagePushRegistry">`imagePushRegistry`</a>
+
+- 类型：`Boolean`
+- 默认值：`false`
+- 必填：`否`
+- 支持模板：`javaDeployDocker` `nodeDeployDocker`
+
+> 是否推送镜像到Registry服务器（`true`：`registryAuth` `registryUrl` 必填；`false`：`imageTempSavePath` 必填）
+> 
+> 开启：构建成功后，会自动将构建产物镜像推送到Registry服务器，部署会从Registry服务器拉取镜像进行部署
+> 
+> 关闭：构建成功后，会直接把镜像包上传到部署服务器进行部署
 
 ### <a id="registryUrl">`registryUrl`</a>
 
 - 类型：`String`
 - 默认值：无
-- 必填：`是`
+- 必填：`否`
+  - `imagePushRegistry`=`true`：`是`
+  - `imagePullLogin`=`true`：`是`
 - 支持模板：`javaDeployDocker` `nodeDeployDocker`
 
 > Docker镜像Registry服务器地址，用于登录Registry服务器、推送镜像
+> 
+> 注意：不能带`http://`、`https://`前缀
 
 ### <a id="imagePullLogin">`imagePullLogin`</a>
 
@@ -423,7 +444,7 @@
 - 必填：`否`
 - 支持模板：`javaDeployDocker` `nodeDeployDocker`
 
-> 拉取镜像是否需要登录
+> 拉取镜像是否需要登录（`true`：`registryAuth` `registryUrl` 必填）
 
 ### <a id="registryProject">`registryProject`</a>
 
@@ -433,6 +454,19 @@
 - 支持模板：`javaDeployDocker` `nodeDeployDocker`
 
 > Registry服务器项目，用于推送镜像到Registry项目
+
+### <a id="imageTempSavePath">`imageTempSavePath`</a>
+
+- 类型：`String`
+- 默认值：`siweite-pipeline-image`
+- 必填：`否`
+- 支持模板：`javaDeployDocker` `nodeDeployDocker`
+
+> 远端部署服务器镜像临时保存相对路径（当`imagePushRegistry`=`false`时使用）
+>
+> 基于选择部署的服务器配置的远端路径(Jenkins -> 系统管理 -> 系统配置 -> SSH Servers -> Name)的相对路径
+> 
+> 会将打包好的镜像文件推送到远端部署服务器，构建成功后，会自动删除
 
 ### <a id="baseImage">`baseImage`</a>
 

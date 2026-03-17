@@ -147,29 +147,44 @@ def call(BuildArgsModel buildArgs) {
             stage('制作镜像') {
                 steps {
                     // 登录Registry服务器 (用于推送镜像到Registry服务器)
-                    withCredentials([usernamePassword(credentialsId: "${buildArgs.registryAuth}", passwordVariable: 'password', usernameVariable: 'username')]) {
-                        sh "docker login -u ${username} -p ${password} ${buildArgs.registryUrl}"
-                    }
-
-                    // 提前拉取无法在构建的时候拉取的镜像
                     script {
+                        if (buildArgs.imagePullLogin) {
+                            withCredentials([usernamePassword(credentialsId: "${buildArgs.registryAuth}", passwordVariable: 'password', usernameVariable: 'username')]) {
+                                sh "docker login -u ${username} -p ${password} ${buildArgs.registryUrl}"
+                            }
+                        }
+
+                        // 提前拉取无法在构建的时候拉取的镜像
                         buildArgs.baseImage.each { image ->
                             sh "docker pull ${image}"
                         }
-                    }
+                        if (!buildArgs.imagePushRegistry && buildArgs.imagePullLogin) {
+                            sh "docker logout ${buildArgs.registryUrl}"
+                        }
+                        try {
+                            if (buildArgs.imagePushRegistry) {
+                                withCredentials([usernamePassword(credentialsId: "${buildArgs.registryAuth}", passwordVariable: 'password', usernameVariable: 'username')]) {
+                                    sh "docker login -u ${username} -p ${password} ${buildArgs.registryUrl}"
+                                }
+                            }
+                            // 构建docker镜像
+                            def buildDockerImageCommand = getBuildDockerImageCommand(codeProjectTag: globalVars['CODE_PROJECT_TAG'])
+                            sh "${buildDockerImageCommand}"
+                        } catch (Exception e) {
+                            error e.message
+                        } finally {
+                            if (buildArgs.imagePushRegistry) {
+                                sh "docker logout ${buildArgs.registryUrl}"
+                            }
+                        }
 
-                    // 构建docker镜像
-                    script {
-                        def buildDockerImageCommand = getBuildDockerImageCommand(codeProjectTag: globalVars['CODE_PROJECT_TAG'])
-                        sh "${buildDockerImageCommand}"
                     }
                 }
                 post {
                     always {
-                        // 退出私服镜像仓库
+                        // 删除打包产物
                         sh """
                             rm -rf ./${env.JOB_NAME}/${buildArgs.targetPath}
-                            docker logout ${buildArgs.registryUrl}
                         """
                     }
                 }
@@ -201,11 +216,23 @@ def call(BuildArgsModel buildArgs) {
                             }
                         }
                     }
-                    // 向部署服务器发送部署指令
-                    sshPublisher(publishers: [sshPublisherDesc(configName: "${params.DEPLOY_SERVER}", transfers: [sshTransfer(cleanRemote: false, excludes: '',
-                        execCommand: "${globalVars['deployCommand']}",
-                        execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '',
-                        remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: buildArgs.debug)])
+                    script {
+                        def remoteDirectory = buildArgs.imagePushRegistry ? '' : buildArgs.imageTempSavePath
+                        def sourceFiles = buildArgs.imagePushRegistry ? '' : "${env.SWT_IMAGE_NAME}-${globalVars['CODE_PROJECT_TAG']}.tar"
+                        try {
+                            // 向部署服务器发送部署指令
+                            sshPublisher(publishers: [sshPublisherDesc(configName: "${params.DEPLOY_SERVER}", transfers: [sshTransfer(cleanRemote: false, excludes: '',
+                                    execCommand: "${globalVars['deployCommand']}",
+                                    execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: "${remoteDirectory}",
+                                    remoteDirectorySDF: false, removePrefix: '', sourceFiles: "${sourceFiles}")], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: buildArgs.debug)])
+                        } finally {
+                            // 删除保存的镜像包
+                            if (!buildArgs.imagePushRegistry) {
+                                sh " rm -rf ${sourceFiles}"
+
+                            }
+                        }
+                    }
                 }
             }
         }
