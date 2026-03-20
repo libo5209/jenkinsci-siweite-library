@@ -59,7 +59,6 @@ def call(BuildArgsModel buildArgs) {
                             sh "rm -rf ./${buildArgs.projectName}/node_modules/${buildArgs.cleanCachePath}"
                         }
                         if ('clean_workspace' == params.CLEAN_CACHE || 'clean_all' == params.CLEAN_CACHE) {
-
                             println "清理缓存-清理工作空间"
                             deleteDir()
                         }
@@ -143,36 +142,23 @@ def call(BuildArgsModel buildArgs) {
             }
             stage('制作镜像') {
                 steps {
-                    // 登录Registry服务器 (用于推送镜像到Registry服务器)
                     script {
-                        if (buildArgs.imagePullLogin) {
+                        // 登录Registry服务器 (用于拉取镜像或推送镜像到Registry服务器)
+                        if (buildArgs.imagePullLogin || buildArgs.imagePushRegistry) {
                             withCredentials([usernamePassword(credentialsId: "${buildArgs.registryAuth}", passwordVariable: 'password', usernameVariable: 'username')]) {
                                 sh "docker login -u ${username} -p ${password} ${buildArgs.registryUrl}"
                             }
                         }
-
-                        // 提前拉取无法在构建的时候拉取的镜像
-                        buildArgs.baseImage.each { image ->
-                            sh "docker pull ${image}"
-                        }
-                        if (!buildArgs.imagePushRegistry && buildArgs.imagePullLogin) {
-                            sh "docker logout ${buildArgs.registryUrl}"
-                        }
                         try {
-                            if (buildArgs.imagePushRegistry) {
-                                withCredentials([usernamePassword(credentialsId: "${buildArgs.registryAuth}", passwordVariable: 'password', usernameVariable: 'username')]) {
-                                    sh "docker login -u ${username} -p ${password} ${buildArgs.registryUrl}"
-                                }
+                            // 提前拉取无法在构建的时候拉取的镜像
+                            buildArgs.baseImage.each { image ->
+                                sh "docker pull ${image}"
                             }
                             // 构建docker镜像
                             def buildDockerImageCommand = getBuildDockerImageCommand(codeProjectTag: globalVars['CODE_PROJECT_TAG'])
                             sh "${buildDockerImageCommand}"
                         } catch (Exception e) {
                             error e.message
-                        } finally {
-                            if (buildArgs.imagePushRegistry) {
-                                sh "docker logout ${buildArgs.registryUrl}"
-                            }
                         }
 
                     }
@@ -180,53 +166,53 @@ def call(BuildArgsModel buildArgs) {
                 post {
                     always {
                         // 删除打包产物
-                        sh """
-                            rm -rf ./${env.JOB_NAME}/${buildArgs.targetPath}
-                        """
+                        sh "rm -rf ./${buildArgs.projectName}/${buildArgs.targetPath}"
+                        // 退出登录Registry服务器
+                        script {
+                            if (buildArgs.imagePullLogin || buildArgs.imagePushRegistry) {
+                                sh "docker logout ${buildArgs.registryUrl}"
+                            }
+                        }
                     }
                 }
             }
             stage('部署应用') {
                 steps {
                     script {
+                        try {
+                            globalVars['deployCommand'] = getDeployDockerCommand(codeProjectTag: globalVars['CODE_PROJECT_TAG'], publishPort: params.DEPLOY_PORT)
+                        } catch (Exception e) {
+                            error e.message
+                        }
+
+                        def remoteDirectory = buildArgs.imagePushRegistry ? '' : buildArgs.imageTempSavePath
+                        globalVars['sourceFiles'] = buildArgs.imagePushRegistry ? '' : "${env.SWT_IMAGE_NAME}-${globalVars['CODE_PROJECT_TAG']}.tar"
+                        // 向部署服务器发送部署指令
                         if (buildArgs.imagePullLogin) {
                             withCredentials([usernamePassword(credentialsId: "${buildArgs.registryAuth}", passwordVariable: 'password', usernameVariable: 'username')]) {
-                                try {
-                                    globalVars['deployCommand'] = getDeployDockerCommand(
-                                            codeProjectTag: globalVars['CODE_PROJECT_TAG'],
-                                            publishPort: params.DEPLOY_PORT,
-                                            repoUsername: username,
-                                            repoPassword: password
-                                    )
-                                } catch (Exception e) {
-                                    error e.message
-                                }
+                                sshPublisher(publishers: [sshPublisherDesc(configName: "${params.DEPLOY_SERVER}", transfers: [sshTransfer(cleanRemote: false, excludes: '',
+                                        execCommand: """
+                                            docker login -u ${username} -p ${password} ${buildArgs.registryUrl}
+                                            ${globalVars['deployCommand']}
+                                            docker logout ${buildArgs.registryUrl}
+                                        """,
+                                        execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: "${remoteDirectory}",
+                                        remoteDirectorySDF: false, removePrefix: '', sourceFiles: "${globalVars['sourceFiles']}")], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: buildArgs.debug)])
                             }
                         } else {
-                            try {
-                                globalVars['deployCommand'] = getDeployDockerCommand(
-                                        codeProjectTag: globalVars['CODE_PROJECT_TAG'],
-                                        publishPort: params.DEPLOY_PORT
-                                )
-                            } catch (Exception e) {
-                                error e.message
-                            }
-                        }
-                    }
-                    script {
-                        def remoteDirectory = buildArgs.imagePushRegistry ? '' : buildArgs.imageTempSavePath
-                        def sourceFiles = buildArgs.imagePushRegistry ? '' : "${env.SWT_IMAGE_NAME}-${globalVars['CODE_PROJECT_TAG']}.tar"
-                        try {
-                            // 向部署服务器发送部署指令
                             sshPublisher(publishers: [sshPublisherDesc(configName: "${params.DEPLOY_SERVER}", transfers: [sshTransfer(cleanRemote: false, excludes: '',
                                     execCommand: "${globalVars['deployCommand']}",
                                     execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: "${remoteDirectory}",
-                                    remoteDirectorySDF: false, removePrefix: '', sourceFiles: "${sourceFiles}")], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: buildArgs.debug)])
-                        } finally {
-                            // 删除保存的镜像包
+                                    remoteDirectorySDF: false, removePrefix: '', sourceFiles: "${globalVars['sourceFiles']}")], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: buildArgs.debug)])
+                        }
+                    }
+                }
+                post {
+                    always {
+                        // 删除保存的镜像包
+                        script {
                             if (!buildArgs.imagePushRegistry) {
-                                sh " rm -rf ${sourceFiles}"
-
+                                sh " rm -rf ${globalVars['sourceFiles']}"
                             }
                         }
                     }

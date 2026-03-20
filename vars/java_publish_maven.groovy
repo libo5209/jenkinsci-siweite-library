@@ -51,7 +51,6 @@ def call(BuildArgsModel buildArgs) {
                         if ('clean_build' == params.CLEAN_CACHE || 'clean_all' == params.CLEAN_CACHE) {
                             def mavenVersion = sh(script: "mvn -v | grep 'Apache Maven' | awk '{print \$3}'", returnStdout: true).trim()
                             globalVars['MAVEN_CLEAN_COMMAND'] = getCleanMavenCommand(version: mavenVersion, cleanCachePath: buildArgs.cleanCachePath)
-
                             println "清理缓存-清理本地仓库"
                             sh "${globalVars['MAVEN_CLEAN_COMMAND']}"
                         }

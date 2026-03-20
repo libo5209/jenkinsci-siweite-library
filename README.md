@@ -69,7 +69,7 @@
 - Java发布私仓流水线配置
 
 ```groovy
-@Library('jenkinsci-siweite-library@0.4.0') _
+@Library('jenkinsci-siweite-library@0.4.1') _
 
 // 控制参数
 def args = [
@@ -101,7 +101,7 @@ SiweiteCI.javaPublishMaven(args)
 - SpringBoot项目流水线配置
 
 ```groovy
-@Library('jenkinsci-siweite-library@0.4.0') _
+@Library('jenkinsci-siweite-library@0.4.1') _
 
 // 控制参数
 def args = [
@@ -148,7 +148,7 @@ SiweiteCI.javaDeployDocker(args)
 - Solon项目流水线配置
 
 ```groovy
-@Library('jenkinsci-siweite-library@0.4.0') _
+@Library('jenkinsci-siweite-library@0.4.1') _
 
 // 控制参数
 def args = [
@@ -197,7 +197,7 @@ SiweiteCI.javaDeployDocker(args)
 - Node项目流水线配置
 
 ```groovy
-@Library('jenkinsci-siweite-library@0.4.0') _
+@Library('jenkinsci-siweite-library@0.4.1') _
 
 // 控制参数
 def args = [
@@ -242,7 +242,7 @@ SiweiteCI.nodeDeployDocker(args)
 
 ### 2.3 快速开始
 
-[📘使用文档](./docs/start.md)
+[📘使用文档](./docs/start.md)</br>
 [📙示例项目](https://gitee.com/siweite/siweite-sample-pipeline)
 
 ## 三 后续计划
