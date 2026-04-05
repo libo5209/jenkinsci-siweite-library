@@ -83,6 +83,8 @@
    > 
    > Source Code Management：配置`jenkinsci-siweite-library`仓库地址（建议把仓库克隆到本地代码仓库中）
    > 
+   > 建议：新增高级的克隆行为，配置浅克隆（深度 1 ），节约克隆时间
+   > 
    > 其他配置保持默认即可
 
 下一章：[搭建流水线](./pipeline.md)

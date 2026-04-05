@@ -11,7 +11,7 @@ siweite-pipeline - 仓库名称
 ├── program-one - 流水线项目集（一） 
 ├── program-two - 流水线项目集（二）
 ├── program-three - 流水线项目集（三）
-├── ├── project-commons - 某公共项目（`javaPublishMaven`示例）
+│   ├── project-commons - 某公共项目（`javaPublishMaven`示例）
 │   │   └── Jenkinsfile - 流水线脚本（必选）
 │   ├── project-admin - 某后台项目
 │   │   ├── resource - 资源/配置文件（可选）

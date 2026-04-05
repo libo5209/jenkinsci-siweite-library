@@ -53,6 +53,15 @@
 - 🔧 标准化：统一团队的 CI/CD 实践和流程规范
 - 🔄 可复用：一次封装，多处使用，便于维护和升级
 
+### 1.4 效果图
+
+<table>
+    <tr>
+        <td><img src="./assets/stageResult.png" alt="Pipeline: Stage View 效果图"/></td>
+        <td><img src="./assets/graphResult.png" alt="Pipeline Graph View 效果图"/></td>
+    </tr>
+</table>
+
 ## 二 使用指南
 
 ### 2.1 支持模板
