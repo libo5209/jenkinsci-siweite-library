@@ -55,7 +55,7 @@
 
 2. 添加需要部署的远程服务器
 
-   配置位置：系统管理 → 系统配置 → Publish over SSH → SSH Servers
+   配置位置：系统管理 → 系统配置 → Publish over SSH → SSH Servers（`Remote Directory`不能配置为`/`，会有“坑”）
 
    例如：
    > Name：app01
@@ -63,8 +63,6 @@
    > Hostname：192.168.x.x
    > 
    > Username：root
-   > 
-   > Remote Directory：/
 
 3. 测试配置是否成功
 
