@@ -89,7 +89,7 @@
 |    [notifyType](#notifyType)    |  通知方式   | `String` |        ✅         |        ✅         |        ✅         |
 | [notifyRobotId](#notifyRobotId) | 通知机器人ID | `String` |        ✅         |        ✅         |        ✅         |
 
-### 9. 通知配置
+### 9. 步骤配置
 
 |                       标识                        |    名称    |    类型     | javaPublishMaven | javaDeployDocker | nodeDeployDocker |
 |:-----------------------------------------------:|:--------:|:---------:|:----------------:|:----------------:|:----------------:|
@@ -485,7 +485,7 @@
 
 > 远端部署服务器镜像临时保存相对路径（当`imagePushRegistry`=`false`时使用）
 >
-> 基于选择部署的服务器配置的远端路径(Jenkins -> 系统管理 -> 系统配置 -> SSH Servers -> Name)的相对路径
+> 基于选择部署的服务器配置的远端路径(Jenkins -> 系统管理 -> 系统配置 -> SSH Servers -> Remote Directory)的相对路径，`Remote Directory`不能配置为`/`，会有“坑”
 > 
 > 会将打包好的镜像文件推送到远端部署服务器，构建成功后，会自动删除
 
