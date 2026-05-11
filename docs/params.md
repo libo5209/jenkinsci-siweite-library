@@ -41,15 +41,17 @@
 
 ### 4. 运行部署配置
 
-|              标识               |    名称    |     类型      | javaPublishMaven | javaDeployDocker | nodeDeployDocker |
-|:-----------------------------:|:--------:|:-----------:|:----------------:|:----------------:|:----------------:|
-| [deployServer](#deployServer) |  部署服务器   | `List<Map>` |        ❌         |        ✅         |        ✅         |
-|    [runEnvKey](#runEnvKey)    | 容器运行环境键  |  `String`   |        ❌         |        ✅         |        ✅         |
-|    [deployEnv](#deployEnv)    |   部署环境   |  `String`   |        ❌         |        ✅         |        ✅         |
-|   [deployPort](#deployPort)   |  部署对外端口  |  `Integer`  |        ❌         |        ✅         |        ✅         |
-|      [runPort](#runPort)      |   运行端口   |  `Integer`  |        ❌         |        ✅         |        ✅         |
-|   [runNetwork](#runNetwork)   | 容器运行网络模式 |  `String`   |        ❌         |        ✅         |        ✅         |
-|   [runRestart](#runRestart)   |  容器重启策略  |  `String`   |        ❌         |        ✅         |        ✅         |
+|               标识                |    名称    |       类型       | javaPublishMaven | javaDeployDocker | nodeDeployDocker |
+|:-------------------------------:|:--------:|:--------------:|:----------------:|:----------------:|:----------------:|
+|  [deployServer](#deployServer)  |  部署服务器   | `List<String>` |        ❌         |        ✅         |        ✅         |
+|     [runEnvKey](#runEnvKey)     | 容器运行环境键  |    `String`    |        ❌         |        ✅         |        ✅         |
+|     [deployEnv](#deployEnv)     |   部署环境   |    `String`    |        ❌         |        ✅         |        ✅         |
+|    [deployPort](#deployPort)    |  部署对外端口  |   `Integer`    |        ❌         |        ✅         |        ✅         |
+|       [runPort](#runPort)       |   运行端口   |   `Integer`    |        ❌         |        ✅         |        ✅         |
+|    [runNetwork](#runNetwork)    | 容器运行网络模式 |    `String`    |        ❌         |        ✅         |        ✅         |
+|    [runRestart](#runRestart)    |  容器重启策略  |    `String`    |        ❌         |        ✅         |        ✅         |
+|   [runPortsMap](#runPortsMap)   |  容器端口映射  |     `Map`      |        ❌         |        ✅         |        ✅         |
+| [runVolumesMap](#runVolumesMap) |  容器目录挂载  |     `Map`      |        ❌         |        ✅         |        ✅         |
 
 ### 5. 构建选项配置
 
@@ -345,6 +347,25 @@
 - 支持模板：`javaDeployDocker` `nodeDeployDocker`
 
 > 容器重启策略，可选：`no` `on-failure` `always` `unless-stopped` 详解：[容器自动启动策略](https://docs.docker.com/engine/containers/start-containers-automatically/")
+
+### <a id="runPortsMap">`runPortsMap`</a>
+
+- 类型：`Map`
+- 默认值：无
+- 必填：`否`
+- 支持模板：`javaDeployDocker` `nodeDeployDocker`
+
+> 容器启动端口映射配置，格式：`host_port:container_port`，`host_port`为Map的key，`container_port`为Map的value
+
+### <a id="runVolumesMap">`runVolumesMap`</a>
+
+- 类型：`Map`
+- 默认值：无
+- 必填：`否`
+- 支持模板：`javaDeployDocker` `nodeDeployDocker`
+
+> 容器启动目录映射/挂载，格式：`host_dir:container_dir`，`host_dir`为Map的key，`container_dir`为Map的value
+
 
 ### <a id="buildTimeOut">`buildTimeOut`</a>
 
