@@ -178,7 +178,7 @@ def call(BuildArgsModel buildArgs) {
                             // 构建所有部署项目的 docker镜像
                             globalVars['DEPLOY_PROJECTS'].each { project ->
                                 env.SWT_TMP_PROJECT = "${project}"
-                                def buildDockerImageCommand = getBuildDockerImageCommand(codeProjectTag: globalVars['CODE_PROJECT_TAG'], projectName: ${project})
+                                def buildDockerImageCommand = getBuildDockerImageCommand(codeProjectTag: globalVars['CODE_PROJECT_TAG'], projectName: "${project}")
                                 sh "${buildDockerImageCommand}"
                             }
                         } catch (Exception e) {
