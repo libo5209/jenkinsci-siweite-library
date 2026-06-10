@@ -153,8 +153,10 @@ def call(BuildArgsModel buildArgs) {
                 }
                 steps {
                     // 对所有需要部署的项目制作产物
-                    globalVars['DEPLOY_PROJECTS'].each { project ->
-                        archiveArtifacts artifacts: "${buildArgs.projectName}/${buildArgs.multiProjectMap[project].targetPath}", fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
+                    script {
+                        globalVars['DEPLOY_PROJECTS'].each { project ->
+                            archiveArtifacts artifacts: "${buildArgs.projectName}/${buildArgs.multiProjectMap[project].targetPath}", fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
+                        }
                     }
                 }
             }
@@ -186,12 +188,12 @@ def call(BuildArgsModel buildArgs) {
                 }
                 post {
                     always {
-                        // 删除所有部署项目打包产物
-                        globalVars['DEPLOY_PROJECTS'].each { project ->
-                            sh "rm -rf ./${buildArgs.projectName}/${buildArgs.multiProjectMap[project].targetPath}"
-                        }
-                        // 退出登录Registry服务器
                         script {
+                            // 删除所有部署项目打包产物
+                            globalVars['DEPLOY_PROJECTS'].each { project ->
+                                sh "rm -rf ./${buildArgs.projectName}/${buildArgs.multiProjectMap[project].targetPath}"
+                            }
+                            // 退出登录Registry服务器
                             if (buildArgs.imagePullLogin || buildArgs.imagePushRegistry) {
                                 sh "docker logout ${buildArgs.registryUrl}"
                             }
