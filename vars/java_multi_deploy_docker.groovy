@@ -41,7 +41,7 @@ def call(BuildArgsModel buildArgs) {
             // 部署服务器
             choice name: 'DEPLOY_SERVER', choices: buildArgs.deployServer, description: '选择需要部署服务器'
             // 部署项目
-            string name: 'DEPLOY_PROJECTS', choices: deployProjects, description: '请选择需要部署的项目'
+            choice name: 'DEPLOY_PROJECTS', choices: deployProjects, description: '请选择需要部署的项目'
             // 构建模式：发布 或 回滚
             choice(name: 'DEPLOY_MODE', choices: ['DEPLOY','ROLLBACK'], description: '请选择发布或者回滚？')
         }
