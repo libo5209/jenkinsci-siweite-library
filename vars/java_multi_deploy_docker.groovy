@@ -59,10 +59,10 @@ def call(BuildArgsModel buildArgs) {
                 steps {
                     script {
                         // 计算需要部署的项目,以数组展示
-                        globalVars['DEPLOY_PROJECTS'] = "${DEPLOY_PROJECTS}".split(',');
+                        globalVars['DEPLOY_PROJECTS'] = "${params.DEPLOY_PROJECTS}".split(',');
                         def isAll = globalVars['DEPLOY_PROJECTS'].contains("all");
                         if (isAll) {
-                            globalVars['DEPLOY_PROJECTS'] = buildArgs.deployProjects.split(',').removeAll("all");
+                            globalVars['DEPLOY_PROJECTS'] = deployProjects.removeAll("all");
                         }
 
                         // 校验必须存在一个及以上待部署项目
