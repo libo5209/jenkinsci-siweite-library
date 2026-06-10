@@ -66,6 +66,7 @@ def call(BuildArgsModel buildArgs) {
                         }
 
                         // 校验必须存在一个及以上待部署项目
+                        println "待部署项目：${globalVars['DEPLOY_PROJECTS']}"
                         if (!globalVars['DEPLOY_PROJECTS'] || globalVars['DEPLOY_PROJECTS'].size() == 0) {
                             error '部署项目 [DEPLOY_PROJECTS] 构建参数必选'
                         }
