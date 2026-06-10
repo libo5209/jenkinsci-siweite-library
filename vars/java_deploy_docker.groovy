@@ -39,7 +39,7 @@ def call(BuildArgsModel buildArgs) {
             // 部署服务器
             choice name: 'DEPLOY_SERVER', choices: buildArgs.deployServer, description: '选择需要部署服务器'
             // 运行端口
-            string name: 'DEPLOY_PORT', defaultValue: deployPortStr, trim: true, description: '选择需要运行端口'
+            string name: 'DEPLOY_PORT', defaultValue: deployPortStr, trim: true, description: '选择需要运行端口（容器运行网络模式[runNetwork]为 bridge时才有效）'
             // 构建模式：发布 或 回滚
             choice(name: 'DEPLOY_MODE', choices: ['DEPLOY','ROLLBACK'], description: '请选择发布或者回滚？')
         }
