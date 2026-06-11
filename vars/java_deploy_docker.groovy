@@ -39,7 +39,7 @@ def call(BuildArgsModel buildArgs) {
             // 部署服务器
             choice name: 'DEPLOY_SERVER', choices: buildArgs.deployServer, description: '选择需要部署服务器'
             // 运行端口
-            string name: 'DEPLOY_PORT', defaultValue: deployPortStr, trim: true, description: '选择需要运行端口'
+            string name: 'DEPLOY_PORT', defaultValue: deployPortStr, trim: true, description: '选择需要运行端口（容器运行网络模式[runNetwork]为 bridge时才有效）'
             // 构建模式：发布 或 回滚
             choice(name: 'DEPLOY_MODE', choices: ['DEPLOY','ROLLBACK'], description: '请选择发布或者回滚？')
         }
@@ -182,30 +182,30 @@ def call(BuildArgsModel buildArgs) {
                 steps {
                     script {
                         try {
-                            globalVars['deployCommand'] = getDeployDockerCommand(codeProjectTag: globalVars['CODE_PROJECT_TAG'], publishPort: params.DEPLOY_PORT)
+                            globalVars['DEPLOY_COMMAND'] = getDeployDockerCommand(codeProjectTag: globalVars['CODE_PROJECT_TAG'], publishPort: params.DEPLOY_PORT)
                         } catch (Exception e) {
                             error e.message
                         }
 
                         def remoteDirectory = buildArgs.imagePushRegistry ? '' : buildArgs.imageTempSavePath
-                        globalVars['sourceFiles'] = buildArgs.imagePushRegistry ? '' : "${env.SWT_IMAGE_NAME}-${globalVars['CODE_PROJECT_TAG']}.tar"
+                        globalVars['SOURCE_FILES'] = buildArgs.imagePushRegistry ? '' : "${env.SWT_IMAGE_NAME}-${globalVars['CODE_PROJECT_TAG']}.tar"
                         // 向部署服务器发送部署指令
                         if (buildArgs.imagePullLogin) {
                             withCredentials([usernamePassword(credentialsId: "${buildArgs.registryAuth}", passwordVariable: 'password', usernameVariable: 'username')]) {
                                 sshPublisher(publishers: [sshPublisherDesc(configName: "${params.DEPLOY_SERVER}", transfers: [sshTransfer(cleanRemote: false, excludes: '',
                                         execCommand: """
                                             docker login -u ${username} -p ${password} ${buildArgs.registryUrl}
-                                            ${globalVars['deployCommand']}
+                                            ${globalVars['DEPLOY_COMMAND']}
                                             docker logout ${buildArgs.registryUrl}
                                         """,
                                         execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: "${remoteDirectory}",
-                                        remoteDirectorySDF: false, removePrefix: '', sourceFiles: "${globalVars['sourceFiles']}")], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: buildArgs.debug)])
+                                        remoteDirectorySDF: false, removePrefix: '', sourceFiles: "${globalVars['SOURCE_FILES']}")], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: buildArgs.debug)])
                             }
                         } else {
                             sshPublisher(publishers: [sshPublisherDesc(configName: "${params.DEPLOY_SERVER}", transfers: [sshTransfer(cleanRemote: false, excludes: '',
-                                    execCommand: "${globalVars['deployCommand']}",
+                                    execCommand: "${globalVars['DEPLOY_COMMAND']}",
                                     execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: "${remoteDirectory}",
-                                    remoteDirectorySDF: false, removePrefix: '', sourceFiles: "${globalVars['sourceFiles']}")], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: buildArgs.debug)])
+                                    remoteDirectorySDF: false, removePrefix: '', sourceFiles: "${globalVars['SOURCE_FILES']}")], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: buildArgs.debug)])
                         }
                     }
                 }
@@ -214,7 +214,7 @@ def call(BuildArgsModel buildArgs) {
                         // 删除保存的镜像包
                         script {
                             if (!buildArgs.imagePushRegistry) {
-                                sh " rm -rf ${globalVars['sourceFiles']}"
+                                sh " rm -rf ${globalVars['SOURCE_FILES']}"
                             }
                         }
                     }
