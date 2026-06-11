@@ -189,9 +189,9 @@ def args = [
      * 多项目部署配置
      */
     multiProjectMap: [
-        'siweite-gateway': ['targetPath': 'siweite-gateway/target/*.jar'],
-        'siweite-oauth': ['targetPath': 'siweite-oauth/siweite-oauth-server/target/*.jar'],
-        'siweite-system': ['targetPath': 'siweite-system/siweite-system-server/target/*.jar'],
+        'gateway': ['targetPath': 'siweite-gateway/target/*.jar'],
+        'oauth': ['targetPath': 'siweite-oauth/siweite-oauth-server/target/*.jar'],
+        'system': ['targetPath': 'siweite-system/siweite-system-server/target/*.jar'],
     ],
         
     /*
