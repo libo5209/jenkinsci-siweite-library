@@ -22,7 +22,7 @@
 
 > `jenkinsci-siweite-library`共享库和`Siweite Pipeline Template Plugin`插件同步发版
 
-安装对应的版本号版本 [插件地址](https://gitee.com/siweite/jenkinsci-siweite-library/releases/tag/0.4.3)
+安装对应的版本号版本 [插件地址](https://gitee.com/siweite/jenkinsci-siweite-library/releases/tag/0.5.1)
 
 ## 三 配置全局工具
 

@@ -3,15 +3,17 @@
 import top.siweite.plugins.model.BuildArgsModel
 
 /**
- * Node远程Docker部署模板 流水线方法
+ * Java远程Docker部署模板 流水线方法
  *
  * @param buildArgs 流水线参数
  */
 def call(BuildArgsModel buildArgs) {
     // 定义全局的Map来存储计算变量
     def globalVars = [:]
-    // 预处理参数的类型
-    def deployPortStr = buildArgs.deployPort.toString()
+
+    // 提取所有部署项目列表
+    def deployProjects = buildArgs.multiProjectMap.keySet() as List
+    deployProjects.add(0, 'all')
 
     // 声明式流水线风格--整个构建流程
     pipeline {
@@ -38,25 +40,42 @@ def call(BuildArgsModel buildArgs) {
             string name: 'DEPLOY_BRANCH', defaultValue: buildArgs.gitCodeBranch, description: '选择需要部署项目的分支'
             // 部署服务器
             choice name: 'DEPLOY_SERVER', choices: buildArgs.deployServer, description: '选择需要部署服务器'
-            // 运行端口
-            string name: 'DEPLOY_PORT', defaultValue: deployPortStr, trim: true, description: '选择需要运行端口（容器运行网络模式[runNetwork]为 bridge时才有效）'
+            // 部署项目
+            choice name: 'DEPLOY_PROJECTS', choices: deployProjects, description: '请选择需要部署的项目'
             // 构建模式：发布 或 回滚
             choice(name: 'DEPLOY_MODE', choices: ['DEPLOY','ROLLBACK'], description: '请选择发布或者回滚？')
         }
 
         // 安装配置工具
         tools {
-            // 安装配置为“buildArgs.buildNodeTool”的nodejs版本并将其添加到路径中
-            nodejs buildArgs.buildNodeTool
+            // 安装配置为“buildArgs.buildMavenTool”的maven版本并将其添加到路径中
+            maven buildArgs.buildMavenTool
+            // 安装配置为“buildArgs.buildJdkTool”的Jdk版本并将其添加到路径中
+            jdk buildArgs.buildJdkTool
         }
 
         stages {
             stage('清理缓存') {
                 steps {
                     script {
-                        if ('clean_build' == params.CLEAN_CACHE) {
-                            println "清理缓存-清理本地依赖"
-                            sh "rm -rf ./${buildArgs.projectName}/node_modules/${buildArgs.cleanCachePath}"
+                        // 计算需要部署的项目,以数组展示
+                        globalVars['DEPLOY_PROJECTS'] = "${params.DEPLOY_PROJECTS}".split(',')
+                        def isAll = globalVars['DEPLOY_PROJECTS'].contains("all");
+                        if (isAll) {
+                            globalVars['DEPLOY_PROJECTS'] = deployProjects
+                            globalVars['DEPLOY_PROJECTS'].remove("all")
+                        }
+
+                        // 校验必须存在一个及以上待部署项目
+                        if (!globalVars['DEPLOY_PROJECTS'] || globalVars['DEPLOY_PROJECTS'].size() == 0) {
+                            error '部署项目 [DEPLOY_PROJECTS] 构建参数必选'
+                        }
+                        if ('clean_build' == params.CLEAN_CACHE || 'clean_all' == params.CLEAN_CACHE) {
+                            def mavenVersion = sh(script: "mvn -v | grep 'Apache Maven' | awk '{print \$3}'", returnStdout: true).trim()
+                            globalVars['MAVEN_CLEAN_COMMAND'] = getCleanMavenCommand(version: mavenVersion, cleanCachePath: buildArgs.cleanCachePath)
+                            println "清理缓存-清理本地仓库"
+                            sh "${globalVars['MAVEN_CLEAN_COMMAND']}"
+
                         }
                         if ('clean_workspace' == params.CLEAN_CACHE || 'clean_all' == params.CLEAN_CACHE) {
                             println "清理缓存-清理工作空间"
@@ -134,10 +153,12 @@ def call(BuildArgsModel buildArgs) {
                     expression { buildArgs.stageArchiveArtifacts }
                 }
                 steps {
-                    dir (buildArgs.projectName) {
-                        sh "tar -zcvf dist.tar.gz ${buildArgs.targetPath}"
+                    // 对所有需要部署的项目制作产物
+                    script {
+                        globalVars['DEPLOY_PROJECTS'].each { project ->
+                            archiveArtifacts artifacts: "${buildArgs.projectName}/${buildArgs.multiProjectMap[project].targetPath}", fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
+                        }
                     }
-                    archiveArtifacts artifacts: "${buildArgs.projectName}/dist.tar.gz", fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
                 }
             }
             stage('制作镜像') {
@@ -154,9 +175,12 @@ def call(BuildArgsModel buildArgs) {
                             buildArgs.baseImage.each { image ->
                                 sh "docker pull ${image}"
                             }
-                            // 构建docker镜像
-                            def buildDockerImageCommand = getBuildDockerImageCommand(codeProjectTag: globalVars['CODE_PROJECT_TAG'])
-                            sh "${buildDockerImageCommand}"
+                            // 构建所有部署项目的 docker镜像
+                            globalVars['DEPLOY_PROJECTS'].each { project ->
+                                env.SWT_TMP_PROJECT = "${project}"
+                                def buildDockerImageCommand = getBuildDockerImageCommand(codeProjectTag: globalVars['CODE_PROJECT_TAG'], projectName: "${project}")
+                                sh "${buildDockerImageCommand}"
+                            }
                         } catch (Exception e) {
                             error e.message
                         }
@@ -165,10 +189,12 @@ def call(BuildArgsModel buildArgs) {
                 }
                 post {
                     always {
-                        // 删除打包产物
-                        sh "rm -rf ./${buildArgs.projectName}/${buildArgs.targetPath}"
-                        // 退出登录Registry服务器
                         script {
+                            // 删除所有部署项目打包产物
+                            globalVars['DEPLOY_PROJECTS'].each { project ->
+                                sh "rm -rf ./${buildArgs.projectName}/${buildArgs.multiProjectMap[project].targetPath}"
+                            }
+                            // 退出登录Registry服务器
                             if (buildArgs.imagePullLogin || buildArgs.imagePushRegistry) {
                                 sh "docker logout ${buildArgs.registryUrl}"
                             }
@@ -179,31 +205,40 @@ def call(BuildArgsModel buildArgs) {
             stage('部署应用') {
                 steps {
                     script {
-                        try {
-                            globalVars['DEPLOY_COMMAND'] = getDeployDockerCommand(codeProjectTag: globalVars['CODE_PROJECT_TAG'], publishPort: params.DEPLOY_PORT)
-                        } catch (Exception e) {
-                            error e.message
-                        }
-
+                        println "开始部署"
                         def remoteDirectory = buildArgs.imagePushRegistry ? '' : buildArgs.imageTempSavePath
-                        globalVars['SOURCE_FILES'] = buildArgs.imagePushRegistry ? '' : "${env.SWT_IMAGE_NAME}-${globalVars['CODE_PROJECT_TAG']}.tar"
-                        // 向部署服务器发送部署指令
-                        if (buildArgs.imagePullLogin) {
-                            withCredentials([usernamePassword(credentialsId: "${buildArgs.registryAuth}", passwordVariable: 'password', usernameVariable: 'username')]) {
-                                sshPublisher(publishers: [sshPublisherDesc(configName: "${params.DEPLOY_SERVER}", transfers: [sshTransfer(cleanRemote: false, excludes: '',
-                                        execCommand: """
+                        globalVars['SOURCE_FILES'] = []
+                        // 对所有部署项目进行远程部署
+                        globalVars['DEPLOY_PROJECTS'].each { project ->
+                            try {
+                                globalVars['DEPLOY_COMMAND'] = getDeployDockerCommand(codeProjectTag: globalVars['CODE_PROJECT_TAG'], projectName: project)
+                            } catch (Exception e) {
+                                error e.message
+                            }
+                            // 获取项目镜像名称
+                            def projectImageName = env["SWT_${project.toUpperCase()}_IMAGE_NAME"]
+                            def sourceFiles = buildArgs.imagePushRegistry ? '' : "${projectImageName}-${globalVars['CODE_PROJECT_TAG']}.tar"
+
+                            globalVars['SOURCE_FILES'].add(sourceFiles)
+
+                            // 向部署服务器发送部署指令
+                            if (buildArgs.imagePullLogin) {
+                                withCredentials([usernamePassword(credentialsId: "${buildArgs.registryAuth}", passwordVariable: 'password', usernameVariable: 'username')]) {
+                                    sshPublisher(publishers: [sshPublisherDesc(configName: "${params.DEPLOY_SERVER}", transfers: [sshTransfer(cleanRemote: false, excludes: '',
+                                            execCommand: """
                                             docker login -u ${username} -p ${password} ${buildArgs.registryUrl}
                                             ${globalVars['DEPLOY_COMMAND']}
                                             docker logout ${buildArgs.registryUrl}
                                         """,
+                                            execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: "${remoteDirectory}",
+                                            remoteDirectorySDF: false, removePrefix: '', sourceFiles: "${sourceFiles}")], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: buildArgs.debug)])
+                                }
+                            } else {
+                                sshPublisher(publishers: [sshPublisherDesc(configName: "${params.DEPLOY_SERVER}", transfers: [sshTransfer(cleanRemote: false, excludes: '',
+                                        execCommand: "${globalVars['DEPLOY_COMMAND']}",
                                         execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: "${remoteDirectory}",
-                                        remoteDirectorySDF: false, removePrefix: '', sourceFiles: "${globalVars['SOURCE_FILES']}")], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: buildArgs.debug)])
+                                        remoteDirectorySDF: false, removePrefix: '', sourceFiles: "${sourceFiles}")], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: buildArgs.debug)])
                             }
-                        } else {
-                            sshPublisher(publishers: [sshPublisherDesc(configName: "${params.DEPLOY_SERVER}", transfers: [sshTransfer(cleanRemote: false, excludes: '',
-                                    execCommand: "${globalVars['DEPLOY_COMMAND']}",
-                                    execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: "${remoteDirectory}",
-                                    remoteDirectorySDF: false, removePrefix: '', sourceFiles: "${globalVars['SOURCE_FILES']}")], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: buildArgs.debug)])
                         }
                     }
                 }
@@ -212,7 +247,7 @@ def call(BuildArgsModel buildArgs) {
                         // 删除保存的镜像包
                         script {
                             if (!buildArgs.imagePushRegistry) {
-                                sh " rm -rf ${globalVars['SOURCE_FILES']}"
+                                sh " rm -rf ${globalVars['SOURCE_FILES'].join(' ')}"
                             }
                         }
                     }
