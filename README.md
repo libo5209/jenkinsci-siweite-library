@@ -60,17 +60,22 @@
         <td><img src="./assets/stageResult.png" alt="Pipeline: Stage View 效果图"/></td>
         <td><img src="./assets/graphResult.png" alt="Pipeline Graph View 效果图"/></td>
     </tr>
+    <tr>
+        <td><img src="./assets/itemBuild.png" alt="参数构建效果图"/></td>
+        <td><img src="./assets/buildInfo.png" alt="构建详情效果图"/></td>
+    </tr>
 </table>
 
 ## 二 使用指南
 
 ### 2.1 支持模板
 
-| 标题            | 模板使用方法                              | 阶段/步骤说明(`[]`：可选、`<>`：必选、`{}`：选项必选)                                 |
-|:--------------|:------------------------------------|:-------------------------------------------------------------------|
-| Java 发布私仓     | `SiweiteCI.javaPublishMaven(args)`  | [清理缓存]→[仓库合并]→<项目编译>→<制作产物>→[发送通知]                                 |
-| Java Docker部署 | `SiweiteCI.javaDeployDocker(args)`  | [清理缓存]→[仓库合并]→<项目编译>→<覆盖配置>→[制作产物]→<制作镜像>→{推送私服\|传输镜像}→部署容器→[发送通知] |
-| Node Docker部署 | `SiweiteCI.nodeDeployDocker(args)`  | [清理缓存]→[仓库合并]→<项目编译>→<覆盖配置>→[制作产物]→<制作镜像>→{推送私服\|传输镜像}→部署容器→[发送通知] |
+| 标题                | 模板使用方法                                  | 阶段/步骤说明(`[]`：可选、`<>`：必选、`{}`：选项必选)                                 |
+|:------------------|:----------------------------------------|:-------------------------------------------------------------------|
+| Java 发布私仓         | `SiweiteCI.javaPublishMaven(args)`      | [清理缓存]→[仓库合并]→<项目编译>→<制作产物>→[发送通知]                                 |
+| Java Docker部署     | `SiweiteCI.javaDeployDocker(args)`      | [清理缓存]→[仓库合并]→<项目编译>→<覆盖配置>→[制作产物]→<制作镜像>→{推送私服\|传输镜像}→部署容器→[发送通知] |
+| Node Docker部署     | `SiweiteCI.nodeDeployDocker(args)`      | [清理缓存]→[仓库合并]→<项目编译>→<覆盖配置>→[制作产物]→<制作镜像>→{推送私服\|传输镜像}→部署容器→[发送通知] |
+| Java 多项目 Docker部署 | `SiweiteCI.javaMultiDeployDocker(args)` | [清理缓存]→[仓库合并]→<项目编译>→<覆盖配置>→[制作产物]→<制作镜像>→{推送私服\|传输镜像}→部署容器→[发送通知] |
 
 
 ### 2.2 流水线示例
@@ -78,7 +83,7 @@
 - Java发布私仓流水线配置
 
 ```groovy
-@Library('jenkinsci-siweite-library@0.4.3') _
+@Library('jenkinsci-siweite-library@0.5.1') _
 
 // 控制参数
 def args = [
@@ -110,7 +115,7 @@ SiweiteCI.javaPublishMaven(args)
 - SpringBoot项目流水线配置
 
 ```groovy
-@Library('jenkinsci-siweite-library@0.4.3') _
+@Library('jenkinsci-siweite-library@0.5.1') _
 
 // 控制参数
 def args = [
@@ -154,10 +159,60 @@ def args = [
 SiweiteCI.javaDeployDocker(args)
 ```
 
+- SpringCloud项目流水线配置
+
+```groovy
+@Library('jenkinsci-siweite-library@0.5.1') _
+
+// 控制参数
+def args = [
+    // 部署项目名称
+    projectName: 'siweite-java-cloud',
+    // 项目标题
+    projectTitle: 'siweite快速开发平台[服务端]',
+    // git主代码仓库地址，用于部署的代码仓库地址
+    gitCodeUrl: 'http://192.168.2.110:3000/siweite/siweite-java-cloud.git',
+
+    // git主代码仓库默认选择分支
+    gitCodeBranch: 'master',
+
+    // jdk打包工具，Jenkins -> 系统管理 -> 全局工具配置 -> JDK安装 -> 别名
+    buildJdkTool: 'jdk21',
+    // maven编译工具，Jenkins -> 系统管理 -> 全局工具配置 -> Maven安装 -> 别名
+    buildMavenTool: 'M399',
+    // 编译打包命令，多行命令使用 \n 分割 或 使用 && 或者使用 多行
+    buildCommand: '''
+        mvn -Dmaven.test.skip=true clean package -T 1C
+    ''',
+
+    /*
+     * 多项目部署配置
+     */
+    multiProjectMap: [
+        'siweite-gateway': ['targetPath': 'siweite-gateway/target/*.jar'],
+        'siweite-oauth': ['targetPath': 'siweite-oauth/siweite-oauth-server/target/*.jar'],
+        'siweite-system': ['targetPath': 'siweite-system/siweite-system-server/target/*.jar'],
+    ],
+        
+    /*
+     * 部署配置
+     */
+    // 部署服务器，Jenkins -> 系统管理 -> 系统配置 -> SSH Servers -> Name
+    deployServer: ['server1', 'server2'],
+    // 部署环境，写入环境变量，影响打包、启动读取的环境配置
+    deployEnv: 'prod',
+
+    // git代码仓库凭证，用于拉取待构建的代码仓库
+    gitCodeAuth: '054e6886-1aec-4b81-b28b-fb033d942153',
+]
+
+SiweiteCI.javaMultiDeployDocker(args)
+```
+
 - Solon项目流水线配置
 
 ```groovy
-@Library('jenkinsci-siweite-library@0.4.3') _
+@Library('jenkinsci-siweite-library@0.5.1') _
 
 // 控制参数
 def args = [
@@ -206,7 +261,7 @@ SiweiteCI.javaDeployDocker(args)
 - Node项目流水线配置
 
 ```groovy
-@Library('jenkinsci-siweite-library@0.4.3') _
+@Library('jenkinsci-siweite-library@0.5.1') _
 
 // 控制参数
 def args = [
@@ -265,6 +320,7 @@ SiweiteCI.nodeDeployDocker(args)
 - [x] 支持项目环境配置开发运维分离
 - [x] 支持自定义`Docker`启动参数（如：映射端口、网络模式、自启策略、环境变量等）
 - [x] 支持多个子代码仓库整合到主代码仓库进行构建
+- [x] `Java Maven`支持多项目（如：微服务项目）构建部署
 - [x] 自定义配置开启流水线构建产物（Maven：jar包、Node: dist）
 - [x] 自定义配置开启发送构建通知消息（支持钉钉、飞书、~~企业微信~~）
 - [ ] 支持自定义选择版本进行远程回滚部署
