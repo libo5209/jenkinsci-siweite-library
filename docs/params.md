@@ -6,9 +6,10 @@
 
 ### 1. 运行参数
 
-|       标识        |  名称  |    类型     | javaPublishMaven | javaDeployDocker | nodeDeployDocker | javaMultiDeployDocker |
-|:---------------:|:----:|:---------:|:----------------:|:----------------:|:----------------:|:---------------------:|
-| [debug](#debug) | 调试模式 | `Boolean` |        ✅         |        ✅         |        ✅         |           ✅           |
+|         标识          |  名称  |    类型     | javaPublishMaven | javaDeployDocker | nodeDeployDocker | javaMultiDeployDocker |
+|:-------------------:|:----:|:---------:|:----------------:|:----------------:|:----------------:|:---------------------:|
+|   [debug](#debug)   | 调试模式 | `Boolean` |        ✅         |        ✅         |        ✅         |           ✅           |
+| [runNode](#runNode) | 运行节点 | `String`  |        ✅         |        ✅         |        ✅         |           ✅           |
 
 ### 2. 项目信息
 
@@ -22,7 +23,6 @@
 
 |                 标识                  |     名称      |     类型      | javaPublishMaven | javaDeployDocker | nodeDeployDocker | javaMultiDeployDocker |
 |:-----------------------------------:|:-----------:|:-----------:|:----------------:|:----------------:|:----------------:|:---------------------:|
-| [pipelineRunNode](#pipelineRunNode) |    运行节点     |  `String`   |        ✅         |        ✅         |        ✅         |           ✅           |
 |      [gitCodeUrl](#gitCodeUrl)      |   项目主仓库地址   |  `String`   |        ✅         |        ✅         |        ✅         |           ✅           |
 |   [gitCodeBranch](#gitCodeBranch)   | 项目主仓库默认构建分支 |  `String`   |        ✅         |        ✅         |        ✅         |           ✅           |
 | [cleanCacheValue](#cleanCacheValue) |  清理缓存默认方式   |  `String`   |        ✅         |        ✅         |        ✅         |           ✅           |
@@ -113,6 +113,15 @@
 
 > 调试模式，`false`会最大限度的减少输出日志
 
+### <a id="runNode">`runNode`</a>
+
+- 类型：`String`
+- 默认值：无
+- 必填：`否`
+- 支持模板：`javaPublishMaven` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+
+> 运行节点，项目构建运行的节点标签
+
 ### <a id="projectName">`projectName`</a>
 
 - 类型：`String`
@@ -141,15 +150,6 @@
 - 支持模板：`javaPublishMaven` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
 
 > 项目访问地址，用于消息通知展示
-
-### <a id="pipelineRunNode">~~`pipelineRunNode`~~</a>
-
-- 类型：`String`
-- 默认值：`any`
-- 必填：`否`
-- 支持模板：`javaPublishMaven` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
-
-> **TODO 目前不支持配置** 运行节点，项目构建运行的计算机节点
 
 ### <a id="gitCodeUrl">`gitCodeUrl`</a>
 

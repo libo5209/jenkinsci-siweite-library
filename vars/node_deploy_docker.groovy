@@ -16,7 +16,7 @@ def call(BuildArgsModel buildArgs) {
     // 声明式流水线风格--整个构建流程
     pipeline {
         // 流水线执行位置
-        agent any
+        agent { label buildArgs.runNode }
 
         // 配置选项
         options {
