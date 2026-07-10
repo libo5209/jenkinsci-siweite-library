@@ -11,7 +11,7 @@ siweite-pipeline - 仓库名称
 ├── program-one - 流水线项目集（一） 
 ├── program-two - 流水线项目集（二）
 ├── program-three - 流水线项目集（三）
-│   ├── project-commons - 某公共项目（`javaPublishMaven`示例）
+│   ├── project-commons - 某公共项目（`javaBuildMaven`示例）
 │   │   └── Jenkinsfile - 流水线脚本（必选）
 │   ├── project-admin - 某后台项目
 │   │   ├── resource - 资源/配置文件（可选）
@@ -43,7 +43,7 @@ siweite-pipeline - 仓库名称
 
 1. 示例：
     ```groovy
-    @Library('jenkinsci-siweite-library@0.5.2') _
+    @Library('jenkinsci-siweite-library@0.6.0') _
     // 控制参数
     def args = [
         // 部署项目名称
@@ -60,9 +60,9 @@ siweite-pipeline - 仓库名称
         gitCodeAuth: 'b92981d8-f7c8-49f0-af5c-d65df797772b',
     ]
     // 运行流水线[Java发布私仓]
-    SiweiteCI.javaPublishMaven(args)
+    SiweiteCI.javaBuildMaven(args)
     ```
-2. `@Library('jenkinsci-siweite-library@0.5.2') _`
+2. `@Library('jenkinsci-siweite-library@0.6.0') _`
    > 引入共享库，流水线模板库
    >
    > 格式：@Library('共享仓库配置名称@仓库分支/仓库标签') _
@@ -70,14 +70,15 @@ siweite-pipeline - 仓库名称
 3. `def args = [ ]`
    > 设置影响流水线运行的参数的配置，详见[支持的参数变量](./params.md)
 
-4. `SiweiteCI.javaPublishMaven(args)`
+4. `SiweiteCI.javaBuildMaven(args)`
    > 通过流水线模板运行流水线
 
    支持模板：
 
    | 标题                | 模板使用方法                                  | 阶段/步骤说明(`[]`：可选、`<>`：必选、`{}`：选项必选)                                 |
    |:------------------|:----------------------------------------|:-------------------------------------------------------------------|
-   | Java 发布私仓         | `SiweiteCI.javaPublishMaven(args)`      | [清理缓存]→[仓库合并]→<项目编译>→<制作产物>→[发送通知]                                 |
+   | Java Maven编译打包    | `SiweiteCI.javaBuildMaven(args)`        | [清理缓存]→[仓库合并]→<项目编译>→<制作产物>→[发送通知]                                 |
+   | Node 编译打包         | `SiweiteCI.nodeBuild(args)`             | [清理缓存]→[仓库合并]→<项目编译>→<制作产物>→[发送通知]                                 |
    | Java Docker部署     | `SiweiteCI.javaDeployDocker(args)`      | [清理缓存]→[仓库合并]→<项目编译>→<覆盖配置>→[制作产物]→<制作镜像>→{推送私服\|传输镜像}→部署容器→[发送通知] |
    | Node Docker部署     | `SiweiteCI.nodeDeployDocker(args)`      | [清理缓存]→[仓库合并]→<项目编译>→<覆盖配置>→[制作产物]→<制作镜像>→{推送私服\|传输镜像}→部署容器→[发送通知] |
    | Java 多项目 Docker部署 | `SiweiteCI.javaMultiDeployDocker(args)` | [清理缓存]→[仓库合并]→<项目编译>→<覆盖配置>→[制作产物]→<制作镜像>→{推送私服\|传输镜像}→部署容器→[发送通知] |

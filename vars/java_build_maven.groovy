@@ -3,7 +3,7 @@
 import top.siweite.plugins.model.BuildArgsModel
 
 /**
- * Java发布私仓模板 流水线
+ * Java Maven编译打包模板 流水线
  *
  * @param buildArgs 流水线参数
  */
@@ -92,17 +92,17 @@ def call(BuildArgsModel buildArgs) {
                                 error e.message
                             }
                         }
-                    }
-                    script {
-                        // 拉取子项目整合到主项目中
-                        buildArgs.gitCodeSub.each { repo ->
-                            // 创建拉取仓库的目标文件夹
-                            sh "mkdir -p ${repo.targetDir}"
-                            dir(repo.targetDir) {
-                                checkout changelog: buildArgs.debug, poll: buildArgs.debug, scm: scmGit(branches: [[name: repo.branch ?: params.DEPLOY_BRANCH]],
-                                        doGenerateSubmoduleConfigurations: false,
-                                        extensions: [cloneOption(depth: 1, shallow: true)],
-                                        userRemoteConfigs: [[url: repo.url, credentialsId: buildArgs.gitCodeAuth]])
+                        script {
+                            // 拉取子项目整合到主项目中
+                            buildArgs.gitCodeSub.each { repo ->
+                                // 创建拉取仓库的目标文件夹
+                                sh "mkdir -p ${repo.targetDir}"
+                                dir(repo.targetDir) {
+                                    checkout changelog: buildArgs.debug, poll: buildArgs.debug, scm: scmGit(branches: [[name: repo.branch ?: params.DEPLOY_BRANCH]],
+                                            doGenerateSubmoduleConfigurations: false,
+                                            extensions: [cloneOption(depth: 1, shallow: true)],
+                                            userRemoteConfigs: [[url: repo.url, credentialsId: buildArgs.gitCodeAuth]])
+                                }
                             }
                         }
                     }
@@ -110,6 +110,12 @@ def call(BuildArgsModel buildArgs) {
             }
             stage('项目编译') {
                 steps {
+                    // 复制资源文件进行 覆盖 项目中的文件
+                    sh """
+                        if [ -d './${JOB_NAME}/resource' ]; then
+                            cp -af ./${JOB_NAME}/resource/. ./${buildArgs.projectName}/
+                        fi
+                    """
                     dir(buildArgs.projectName) {
                         sh """
                             ${buildArgs.buildCommand}
