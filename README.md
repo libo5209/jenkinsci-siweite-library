@@ -72,7 +72,8 @@
 
 | 标题                | 模板使用方法                                  | 阶段/步骤说明(`[]`：可选、`<>`：必选、`{}`：选项必选)                                 |
 |:------------------|:----------------------------------------|:-------------------------------------------------------------------|
-| Java 发布私仓         | `SiweiteCI.javaPublishMaven(args)`      | [清理缓存]→[仓库合并]→<项目编译>→<制作产物>→[发送通知]                                 |
+| Java Maven编译打包    | `SiweiteCI.javaBuildMaven(args)`        | [清理缓存]→[仓库合并]→<项目编译>→<制作产物>→[发送通知]                                 |
+| Node 编译打包         | `SiweiteCI.nodeBuild(args)`             | [清理缓存]→[仓库合并]→<项目编译>→<制作产物>→[发送通知]                                 |
 | Java Docker部署     | `SiweiteCI.javaDeployDocker(args)`      | [清理缓存]→[仓库合并]→<项目编译>→<覆盖配置>→[制作产物]→<制作镜像>→{推送私服\|传输镜像}→部署容器→[发送通知] |
 | Node Docker部署     | `SiweiteCI.nodeDeployDocker(args)`      | [清理缓存]→[仓库合并]→<项目编译>→<覆盖配置>→[制作产物]→<制作镜像>→{推送私服\|传输镜像}→部署容器→[发送通知] |
 | Java 多项目 Docker部署 | `SiweiteCI.javaMultiDeployDocker(args)` | [清理缓存]→[仓库合并]→<项目编译>→<覆盖配置>→[制作产物]→<制作镜像>→{推送私服\|传输镜像}→部署容器→[发送通知] |
@@ -83,7 +84,7 @@
 - Java发布私仓流水线配置
 
 ```groovy
-@Library('jenkinsci-siweite-library@0.5.2') _
+@Library('jenkinsci-siweite-library@0.6.0') _
 
 // 控制参数
 def args = [
@@ -109,13 +110,13 @@ def args = [
     // 代码仓库凭证
     gitCodeAuth: '054e6886-1aec-4b81-b28b-fb033d942153',
 ]
-SiweiteCI.javaPublishMaven(args)
+SiweiteCI.javaBuildMaven(args)
 ```
 
 - SpringBoot项目流水线配置
 
 ```groovy
-@Library('jenkinsci-siweite-library@0.5.2') _
+@Library('jenkinsci-siweite-library@0.6.0') _
 
 // 控制参数
 def args = [
@@ -162,7 +163,7 @@ SiweiteCI.javaDeployDocker(args)
 - SpringCloud项目流水线配置
 
 ```groovy
-@Library('jenkinsci-siweite-library@0.5.2') _
+@Library('jenkinsci-siweite-library@0.6.0') _
 
 // 控制参数
 def args = [
@@ -212,7 +213,7 @@ SiweiteCI.javaMultiDeployDocker(args)
 - Solon项目流水线配置
 
 ```groovy
-@Library('jenkinsci-siweite-library@0.5.2') _
+@Library('jenkinsci-siweite-library@0.6.0') _
 
 // 控制参数
 def args = [
@@ -261,7 +262,7 @@ SiweiteCI.javaDeployDocker(args)
 - Node项目流水线配置
 
 ```groovy
-@Library('jenkinsci-siweite-library@0.5.2') _
+@Library('jenkinsci-siweite-library@0.6.0') _
 
 // 控制参数
 def args = [
