@@ -6,101 +6,102 @@
 
 ### 1. 运行参数
 
-|         标识          |  名称  |    类型     | javaBuildMaven | nodeBuild | javaDeployDocker | nodeDeployDocker | javaMultiDeployDocker |
-|:-------------------:|:----:|:---------:|:--------------:|:---------:|:----------------:|:----------------:|:---------------------:|
-|   [debug](#debug)   | 调试模式 | `Boolean` |       ✅        |     ✅     |        ✅         |        ✅         |           ✅           |
-| [runNode](#runNode) | 运行节点 | `String`  |       ✅        |     ✅     |        ✅         |        ✅         |           ✅           |
+|        标识         |   名称   |   类型    | javaBuildMaven | nodeBuild | javaDeployDocker | nodeDeployDocker | javaMultiDeployDocker | customTemplate |
+|:-------------------:|:--------:|:---------:|:--------------:|:---------:|:----------------:|:----------------:|:---------------------:|:--------------:|
+|   [debug](#debug)   | 调试模式 | `Boolean` |       ✅       |    ✅     |        ✅        |        ✅        |          ✅           |       ✅       |
+| [runNode](#runNode) | 运行节点 | `String`  |       ✅       |    ✅     |        ✅        |        ✅        |          ✅           |       ✅       |
 
 ### 2. 项目信息
 
-|              标识               |   名称   |    类型    | javaBuildMaven |  nodeBuild  | javaDeployDocker | nodeDeployDocker | javaMultiDeployDocker |
-|:-----------------------------:|:------:|:--------:|:--------------:|:-----------:|:----------------:|:----------------:|:---------------------:|
-|  [projectName](#projectName)  |  项目名称  | `String` |       ✅        |      ✅      |        ✅         |        ✅         |           ✅           |
-| [projectTitle](#projectTitle) |  项目标题  | `String` |       ✅        |      ✅      |        ✅         |        ✅         |           ✅           |
-|   [projectUrl](#projectUrl)   | 项目访问地址 | `String` |       ✅        |      ✅      |        ✅         |        ✅         |           ✅           |
+|             标识              |     名称     |   类型   | javaBuildMaven | nodeBuild | javaDeployDocker | nodeDeployDocker | javaMultiDeployDocker | customTemplate |
+|:-----------------------------:|:------------:|:--------:|:--------------:|:---------:|:----------------:|:----------------:|:---------------------:|:--------------:|
+|  [projectName](#projectName)  |   项目名称   | `String` |       ✅       |    ✅     |        ✅        |        ✅        |          ✅           |       ✅       |
+| [projectTitle](#projectTitle) |   项目标题   | `String` |       ✅       |    ✅     |        ✅        |        ✅        |          ✅           |       ✅       |
+|   [projectUrl](#projectUrl)   | 项目访问地址 | `String` |       ✅       |    ✅     |        ✅        |        ✅        |          ✅           |       ✅       |
 
 ### 3. 构建参数
 
-|                 标识                  |     名称      |     类型      | javaBuildMaven | nodeBuild | javaDeployDocker | nodeDeployDocker | javaMultiDeployDocker |
-|:-----------------------------------:|:-----------:|:-----------:|:--------------:|:---------:|:----------------:|:----------------:|:---------------------:|
-|      [gitCodeUrl](#gitCodeUrl)      |   项目主仓库地址   |  `String`   |       ✅        |     ✅     |        ✅         |        ✅         |           ✅           |
-|   [gitCodeBranch](#gitCodeBranch)   | 项目主仓库默认构建分支 |  `String`   |       ✅        |     ✅     |        ✅         |        ✅         |           ✅           |
-| [cleanCacheValue](#cleanCacheValue) |  清理缓存默认方式   |  `String`   |       ✅        |     ✅     |        ✅         |        ✅         |           ✅           |
-|  [cleanCachePath](#cleanCachePath)  |  清理编译缓存路径   |  `String`   |       ✅        |     ✅     |        ✅         |        ✅         |           ✅           |
-|      [gitCodeSub](#gitCodeSub)      |   项目子仓库列表   | `List<Map>` |       ✅        |     ✅     |        ✅         |        ✅         |           ✅           |
+|                标识                 |          名称          |    类型     | javaBuildMaven | nodeBuild | javaDeployDocker | nodeDeployDocker | javaMultiDeployDocker | customTemplate |
+|:-----------------------------------:|:----------------------:|:-----------:|:--------------:|:---------:|:----------------:|:----------------:|:---------------------:|:--------------:|
+|      [gitCodeUrl](#gitCodeUrl)      |     项目主仓库地址     |  `String`   |       ✅       |    ✅     |        ✅        |        ✅        |          ✅           |       ✅       |
+|   [gitCodeBranch](#gitCodeBranch)   | 项目主仓库默认构建分支 |  `String`   |       ✅       |    ✅     |        ✅        |        ✅        |          ✅           |       ✅       |
+| [cleanCacheValue](#cleanCacheValue) |    清理缓存默认方式    |  `String`   |       ✅       |    ✅     |        ✅        |        ✅        |          ✅           |       ✅       |
+|  [cleanCachePath](#cleanCachePath)  |    清理编译缓存路径    |  `String`   |       ✅       |    ✅     |        ✅        |        ✅        |          ✅           |       ✅       |
+|      [gitCodeSub](#gitCodeSub)      |     项目子仓库列表     | `List<Map>` |       ✅       |    ✅     |        ✅        |        ✅        |          ✅           |       ✅       |
 
 ### 3. 编译打包配置
 
-|                标识                 |       名称       |    类型    | javaBuildMaven | nodeBuild | javaDeployDocker | nodeDeployDocker | javaMultiDeployDocker |
-|:---------------------------------:|:--------------:|:--------:|:--------------:|:---------:|:----------------:|:----------------:|:---------------------:|
-|   [buildJdkTool](#buildJdkTool)   |    jdk打包工具     | `String` |       ✅        |     ❌     |        ✅         |        ❌         |           ✅           |
-| [buildMavenTool](#buildMavenTool) |   maven编译工具    | `String` |       ✅        |     ❌     |        ✅         |        ❌         |           ✅           |
-|  [buildNodeTool](#buildNodeTool)  |    NODE编译工具    | `String` |       ❌        |     ✅     |        ❌         |        ✅         |           ❌           |
-|   [buildCommand](#buildCommand)   |     编译打包命令     | `String` |       ✅        |     ✅     |        ✅         |        ✅         |           ✅           |
-|     [targetPath](#targetPath)     | 构建产物（打包输出）所在路径 | `String` |       ✅        |     ✅     |        ✅         |        ✅         |           ❌           |
+|               标识                |             名称             |   类型    | javaBuildMaven | nodeBuild | javaDeployDocker | nodeDeployDocker | javaMultiDeployDocker | customTemplate |
+|:---------------------------------:|:----------------------------:|:---------:|:--------------:|:---------:|:----------------:|:----------------:|:---------------------:|:--------------:|
+|   [buildJdkTool](#buildJdkTool)   |         jdk打包工具          | `String`  |       ✅       |    ❌     |        ✅        |        ❌        |          ✅           |       ✅       |
+| [buildMavenTool](#buildMavenTool) |        maven编译工具         | `String`  |       ✅       |    ❌     |        ✅        |        ❌        |          ✅           |       ✅       |
+|  [buildNodeTool](#buildNodeTool)  |         NODE编译工具         | `String`  |       ❌       |    ✅     |        ❌        |        ✅        |          ❌           |       ✅       |
+|   [buildCommand](#buildCommand)   |         编译打包命令         | `String`  |       ✅       |    ✅     |        ✅        |        ✅        |          ✅           |       ✅       |
+|     [targetPath](#targetPath)     | 构建产物（打包输出）所在路径 | `String`  |       ✅       |    ✅     |        ✅        |        ✅        |          ❌           |       ✅       |
+|   [buildNoCache](#buildNoCache)   |        构建不使用缓存        | `Boolean` |       ❌       |    ❌     |        ✅        |        ✅        |          ✅           |       ✅       |
 
 ### 4. 运行部署配置
 
-|               标识                |    名称    |       类型       | javaBuildMaven | nodeBuild | javaDeployDocker | nodeDeployDocker | javaMultiDeployDocker |
-|:-------------------------------:|:--------:|:--------------:|:--------------:|:---------:|:----------------:|:----------------:|:---------------------:|
-|  [deployServer](#deployServer)  |  部署服务器   | `List<String>` |       ❌        |     ❌     |        ✅         |        ✅         |           ✅           |
-|     [runEnvKey](#runEnvKey)     | 容器运行环境键  |    `String`    |       ❌        |     ❌     |        ✅         |        ✅         |           ✅           |
-|     [deployEnv](#deployEnv)     |   部署环境   |    `String`    |       ❌        |     ❌     |        ✅         |        ✅         |           ✅           |
-|    [deployPort](#deployPort)    |  部署对外端口  |   `Integer`    |       ❌        |     ❌     |        ✅         |        ✅         |           ❌           |
-|       [runPort](#runPort)       |   运行端口   |   `Integer`    |       ❌        |     ❌     |        ✅         |        ✅         |           ❌           |
-|    [runNetwork](#runNetwork)    | 容器运行网络模式 |    `String`    |       ❌        |     ❌     |        ✅         |        ✅         |           ✅           |
-|    [runRestart](#runRestart)    |  容器重启策略  |    `String`    |       ❌        |     ❌     |        ✅         |        ✅         |           ✅           |
-|   [runPortsMap](#runPortsMap)   |  容器端口映射  |     `Map`      |       ❌        |     ❌     |        ✅         |        ✅         |           ❌           |
-| [runVolumesMap](#runVolumesMap) |  容器目录挂载  |     `Map`      |       ❌        |     ❌     |        ✅         |        ✅         |           ❌           |
+|              标识               |       名称       |      类型      | javaBuildMaven | nodeBuild | javaDeployDocker | nodeDeployDocker | javaMultiDeployDocker | customTemplate |
+|:-------------------------------:|:----------------:|:--------------:|:--------------:|:---------:|:----------------:|:----------------:|:---------------------:|:--------------:|
+|  [deployServer](#deployServer)  |    部署服务器    | `List<String>` |       ❌       |    ❌     |        ✅        |        ✅        |          ✅           |       ✅       |
+|     [runEnvKey](#runEnvKey)     |  容器运行环境键  |    `String`    |       ❌       |    ❌     |        ✅        |        ✅        |          ✅           |       ✅       |
+|     [deployEnv](#deployEnv)     |     部署环境     |    `String`    |       ❌       |    ❌     |        ✅        |        ✅        |          ✅           |       ✅       |
+|    [deployPort](#deployPort)    |   部署对外端口   |   `Integer`    |       ❌       |    ❌     |        ✅        |        ✅        |          ❌           |       ✅       |
+|       [runPort](#runPort)       |     运行端口     |   `Integer`    |       ❌       |    ❌     |        ✅        |        ✅        |          ❌           |       ✅       |
+|    [runNetwork](#runNetwork)    | 容器运行网络模式 |    `String`    |       ❌       |    ❌     |        ✅        |        ✅        |          ✅           |       ✅       |
+|    [runRestart](#runRestart)    |   容器重启策略   |    `String`    |       ❌       |    ❌     |        ✅        |        ✅        |          ✅           |       ✅       |
+|   [runPortsMap](#runPortsMap)   |   容器端口映射   |     `Map`      |       ❌       |    ❌     |        ✅        |        ✅        |          ❌           |       ✅       |
+| [runVolumesMap](#runVolumesMap) |   容器目录挂载   |     `Map`      |       ❌       |    ❌     |        ✅        |        ✅        |          ❌           |       ✅       |
 
 ### 5. 构建选项配置
 
-|                       标识                        |    名称    |    类型    | javaBuildMaven | nodeBuild | javaDeployDocker | nodeDeployDocker | javaMultiDeployDocker |
-|:-----------------------------------------------:|:--------:|:--------:|:--------------:|:---------:|:----------------:|:----------------:|:---------------------:|
-|          [buildTimeOut](#buildTimeOut)          |  构建超时时间  | `String` |       ✅        |     ✅     |        ✅         |        ✅         |           ✅           |
-|         [daysToKeepStr](#daysToKeepStr)         |  构建保留天数  | `String` |       ✅        |     ✅     |        ✅         |        ✅         |           ✅           |
-|          [numToKeepStr](#numToKeepStr)          |  构建保留个数  | `String` |       ✅        |     ✅     |        ✅         |        ✅         |           ✅           |
-| [artifactDaysToKeepStr](#artifactDaysToKeepStr) | 构建产物保留天数 | `String` |       ✅        |     ✅     |        ✅         |        ✅         |           ✅           |
-|  [artifactNumToKeepStr](#artifactNumToKeepStr)  | 构建产物保留个数 | `String` |       ✅        |     ✅     |        ✅         |        ✅         |           ✅           |
+|                      标识                       |       名称       |   类型   | javaBuildMaven | nodeBuild | javaDeployDocker | nodeDeployDocker | javaMultiDeployDocker | customTemplate |
+|:-----------------------------------------------:|:----------------:|:--------:|:--------------:|:---------:|:----------------:|:----------------:|:---------------------:|:--------------:|
+|          [buildTimeOut](#buildTimeOut)          |   构建超时时间   | `String` |       ✅       |    ✅     |        ✅        |        ✅        |          ✅           |       ✅       |
+|         [daysToKeepStr](#daysToKeepStr)         |   构建保留天数   | `String` |       ✅       |    ✅     |        ✅        |        ✅        |          ✅           |       ✅       |
+|          [numToKeepStr](#numToKeepStr)          |   构建保留个数   | `String` |       ✅       |    ✅     |        ✅        |        ✅        |          ✅           |       ✅       |
+| [artifactDaysToKeepStr](#artifactDaysToKeepStr) | 构建产物保留天数 | `String` |       ✅       |    ✅     |        ✅        |        ✅        |          ✅           |       ✅       |
+|  [artifactNumToKeepStr](#artifactNumToKeepStr)  | 构建产物保留个数 | `String` |       ✅       |    ✅     |        ✅        |        ✅        |          ✅           |       ✅       |
 
 ### 6. 凭证信息
 
-|              标识               |      名称       |    类型    | javaBuildMaven | nodeBuild | javaDeployDocker | nodeDeployDocker | javaMultiDeployDocker |
-|:-----------------------------:|:-------------:|:--------:|:--------------:|:---------:|:----------------:|:----------------:|:---------------------:|
-|  [gitCodeAuth](#gitCodeAuth)  |   git代码仓库凭证   | `String` |       ✅        |     ✅     |        ✅         |        ✅         |           ✅           |
-| [registryAuth](#registryAuth) | Registry服务器凭证 | `String` |       ❌        |     ❌     |        ✅         |        ✅         |           ✅           |
+|             标识              |        名称        |   类型   | javaBuildMaven | nodeBuild | javaDeployDocker | nodeDeployDocker | javaMultiDeployDocker | customTemplate |
+|:-----------------------------:|:------------------:|:--------:|:--------------:|:---------:|:----------------:|:----------------:|:---------------------:|:--------------:|
+|  [gitCodeAuth](#gitCodeAuth)  |  git代码仓库凭证   | `String` |       ✅       |    ✅     |        ✅        |        ✅        |          ✅           |       ✅       |
+| [registryAuth](#registryAuth) | Registry服务器凭证 | `String` |       ❌       |    ❌     |        ✅        |        ✅        |          ✅           |       ✅       |
 
 ### 7. 镜像Registry配置
 
-|                   标识                    |         名称         |       类型       | javaBuildMaven | nodeBuild | javaDeployDocker | nodeDeployDocker | javaMultiDeployDocker |
-|:---------------------------------------:|:------------------:|:--------------:|:--------------:|:---------:|:----------------:|:----------------:|:---------------------:|
-| [imagePushRegistry](#imagePushRegistry) | 是否推送镜像到Registry服务器 |   `Boolean`    |       ❌        |     ❌     |        ✅         |        ✅         |           ✅           |
-|       [registryUrl](#registryUrl)       |     Registry地址     |    `String`    |       ❌        |     ❌     |        ✅         |        ✅         |           ✅           |
-|    [imagePullLogin](#imagePullLogin)    |     拉取镜像是否需要登录     |   `Boolean`    |       ❌        |     ❌     |        ✅         |        ✅         |           ✅           |
-|   [registryProject](#registryProject)   |     Registry项目     |    `String`    |       ❌        |     ❌     |        ✅         |        ✅         |           ✅           |
-| [imageTempSavePath](#imageTempSavePath) |      镜像临时保存路径      |    `String`    |       ❌        |     ❌     |        ✅         |        ✅         |           ✅           |
-|         [baseImage](#baseImage)         |        基础镜像        | `List<String>` |       ❌        |     ❌     |        ✅         |        ✅         |           ✅           |
+|                  标识                   |             名称             |      类型      | javaBuildMaven | nodeBuild | javaDeployDocker | nodeDeployDocker | javaMultiDeployDocker | customTemplate |
+|:---------------------------------------:|:----------------------------:|:--------------:|:--------------:|:---------:|:----------------:|:----------------:|:---------------------:|:--------------:|
+| [imagePushRegistry](#imagePushRegistry) | 是否推送镜像到Registry服务器 |   `Boolean`    |       ❌       |    ❌     |        ✅        |        ✅        |          ✅           |       ✅       |
+|       [registryUrl](#registryUrl)       |         Registry地址         |    `String`    |       ❌       |    ❌     |        ✅        |        ✅        |          ✅           |       ✅       |
+|    [imagePullLogin](#imagePullLogin)    |     拉取镜像是否需要登录     |   `Boolean`    |       ❌       |    ❌     |        ✅        |        ✅        |          ✅           |       ✅       |
+|   [registryProject](#registryProject)   |         Registry项目         |    `String`    |       ❌       |    ❌     |        ✅        |        ✅        |          ✅           |       ✅       |
+| [imageTempSavePath](#imageTempSavePath) |       镜像临时保存路径       |    `String`    |       ❌       |    ❌     |        ✅        |        ✅        |          ✅           |       ✅       |
+|         [baseImage](#baseImage)         |           基础镜像           | `List<String>` |       ❌       |    ❌     |        ✅        |        ✅        |          ✅           |       ✅       |
 
 ### 8. 通知配置
 
-|               标识                |   名称    |    类型    | javaBuildMaven | nodeBuild | javaDeployDocker | nodeDeployDocker | javaMultiDeployDocker |
-|:-------------------------------:|:-------:|:--------:|:--------------:|:---------:|:----------------:|:----------------:|:---------------------:|
-|    [notifyType](#notifyType)    |  通知方式   | `String` |       ✅        |     ✅     |        ✅         |        ✅         |           ✅           |
-| [notifyRobotId](#notifyRobotId) | 通知机器人ID | `String` |       ✅        |     ✅     |        ✅         |        ✅         |           ✅           |
+|              标识               |     名称     |   类型   | javaBuildMaven | nodeBuild | javaDeployDocker | nodeDeployDocker | javaMultiDeployDocker | customTemplate |
+|:-------------------------------:|:------------:|:--------:|:--------------:|:---------:|:----------------:|:----------------:|:---------------------:|:--------------:|
+|    [notifyType](#notifyType)    |   通知方式   | `String` |       ✅       |    ✅     |        ✅        |        ✅        |          ✅           |       ✅       |
+| [notifyRobotId](#notifyRobotId) | 通知机器人ID | `String` |       ✅       |    ✅     |        ✅        |        ✅        |          ✅           |       ✅       |
 
 ### 9. 多项目部署配置
 
-|                 标识                  |  名称   |     类型     | javaBuildMaven | nodeBuild | javaDeployDocker | nodeDeployDocker | javaMultiDeployDocker |
-|:-----------------------------------:|:-----:|:----------:|:--------------:|:---------:|:----------------:|:----------------:|:---------------------:|
-| [multiProjectMap](#multiProjectMap) | 多项目配置 | `Map<Map>` |       ❌        |     ❌     |        ❌         |        ❌         |           ✅           |
+|                标识                 |    名称    |    类型    | javaBuildMaven | nodeBuild | javaDeployDocker | nodeDeployDocker | javaMultiDeployDocker | customTemplate |
+|:-----------------------------------:|:----------:|:----------:|:--------------:|:---------:|:----------------:|:----------------:|:---------------------:|:--------------:|
+| [multiProjectMap](#multiProjectMap) | 多项目配置 | `Map<Map>` |       ❌       |    ❌     |        ❌        |        ❌        |          ✅           |       ✅       |
 
 
 ### 10. 步骤配置
 
-|                       标识                        |    名称    |    类型     | javaBuildMaven | nodeBuild | javaDeployDocker | nodeDeployDocker | javaMultiDeployDocker |
-|:-----------------------------------------------:|:--------:|:---------:|:--------------:|:---------:|:----------------:|:----------------:|:---------------------:|
-| [stageArchiveArtifacts](#stageArchiveArtifacts) | 是否开启构建产物 | `Boolean` |       ✅        |     ✅     |        ✅         |        ✅         |           ✅           |
-|    [stageMessageNotify](#stageMessageNotify)    | 是否开启通知消息 | `Boolean` |       ✅        |     ✅     |        ✅         |        ✅         |           ✅           |
+|                      标识                       |       名称       |   类型    | javaBuildMaven | nodeBuild | javaDeployDocker | nodeDeployDocker | javaMultiDeployDocker | customTemplate |
+|:-----------------------------------------------:|:----------------:|:---------:|:--------------:|:---------:|:----------------:|:----------------:|:---------------------:|:--------------:|
+| [stageArchiveArtifacts](#stageArchiveArtifacts) | 是否开启构建产物 | `Boolean` |       ✅       |    ✅     |        ✅        |        ✅        |          ✅           |       ✅       |
+|    [stageMessageNotify](#stageMessageNotify)    | 是否开启通知消息 | `Boolean` |       ✅       |    ✅     |        ✅        |        ✅        |          ✅           |       ✅       |
 
 ## 参数变量详解
 
@@ -109,7 +110,7 @@
 - 类型：`Boolean`
 - 默认值：`false`
 - 必填：`否`
-- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > 调试模式，`false`会最大限度的减少输出日志
 
@@ -118,7 +119,7 @@
 - 类型：`String`
 - 默认值：无
 - 必填：`否`
-- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > 运行节点，项目构建运行的节点标签
 
@@ -127,7 +128,7 @@
 - 类型：`String`
 - 默认值：无
 - 必填：`是`
-- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > 项目名称，镜像、容器名称，默认`Jenkins`任务名称，建议规则：项目名称-端类型`[siweite-web]`
 > 
@@ -138,7 +139,7 @@
 - 类型：`String`
 - 默认值：无
 - 必填：`是`
-- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > 项目标题，项目的中文名称，用于消息通知展示
 
@@ -146,8 +147,8 @@
 
 - 类型：`String`
 - 默认值：无
-- 必填：`是`
-- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 必填：`否`
+- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > 项目访问地址，用于消息通知展示
 
@@ -155,8 +156,14 @@
 
 - 类型：`String`
 - 默认值：无
-- 必填：`是`
-- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 必填：
+  - `javaBuildMaven`：`是`
+  - `nodeBuild`：`是`
+  - `javaDeployDocker`：`是`
+  - `nodeDeployDocker`：`是`
+  - `javaMultiDeployDocker`：`是`
+  - `customTemplate`：`否`
+- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > 项目主仓库地址，构建项目的根代码仓库地址
 
@@ -165,7 +172,7 @@
 - 类型：`String`
 - 默认值：`main`
 - 必填：`否`
-- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > 项目主仓库默认构建分支
 
@@ -174,7 +181,7 @@
 - 类型：`String`
 - 默认值：`no_clean`
 - 必填：`否`
-- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > 清理缓存默认方式，可选：`no_clean` `clean_build` `clean_workspace` `clean_all`
 > 
@@ -191,7 +198,7 @@
 - 类型：`String`
 - 默认值：无
 - 必填：`否`
-- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > 清理构建缓存路径（相对于Maven本地仓库/Node的node_modules的相对路径）
 > 
@@ -206,7 +213,7 @@
 - 类型：`List<Map>`
 - 默认值：无
 - 必填：`否`
-- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > 项目子仓库列表，将子代码仓库列表，合并到主项目中进行编译/打包
 > 
@@ -230,8 +237,12 @@
 
 - 类型：`String`
 - 默认值：无
-- 必填：`是`
-- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `javaMultiDeployDocker`
+- 必填：
+  - `javaBuildMaven`：`是`
+  - `javaDeployDocker`：`是`
+  - `javaMultiDeployDocker`：`是`
+  - `customTemplate`：`否`
+- 支持模板：`javaBuildMaven` `javaDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > jdk打包工具，配置名称：Jenkins → 系统管理 → 全局工具配置 → JDK安装 → 别名
 
@@ -239,8 +250,12 @@
 
 - 类型：`String`
 - 默认值：无
-- 必填：`是`
-- 支持模板：`javaBuildMaven` `javaDeployDocker` `javaMultiDeployDocker`
+- 必填：
+  - `javaBuildMaven`：`是`
+  - `javaDeployDocker`：`是`
+  - `javaMultiDeployDocker`：`是`
+  - `customTemplate`：`否`
+- 支持模板：`javaBuildMaven` `javaDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > maven编译工具，配置名称：Jenkins → 系统管理 → 全局工具配置 → Maven安装 → 别名
 
@@ -248,8 +263,11 @@
 
 - 类型：`String`
 - 默认值：无
-- 必填：`是`
-- 支持模板： `nodeBuild` `nodeDeployDocker`
+- 必填：
+  - `nodeBuild`：`是`
+  - `nodeDeployDocker`：`是`
+  - `customTemplate`：`否`
+- 支持模板： `nodeBuild` `nodeDeployDocker` `customTemplate`
 
 > NODE编译工具，配置名称：Jenkins → 系统管理 → 全局工具配置 → NodeJS安装 → 别名
 
@@ -262,8 +280,9 @@
   - `javaDeployDocker`：`mvn clean package`
   - `nodeDeployDocker`：`npm run build`
   - `javaMultiDeployDocker`：`mvn clean package`
+  - `customTemplate`：无
 - 必填：`否`
-- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > 编译打包命令，多行命令使用 \n 分割 或 使用 && 或者使用 三引号，推荐使用**三引号**(和实际编写命令一致)
 
@@ -273,20 +292,35 @@
 - 默认值：无
 - 必填：
     - `javaBuildMaven`：`否`
+    - `nodeBuild`：`否`
     - `javaDeployDocker`：`是`
     - `nodeDeployDocker`：`是`
-- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker`
+    - `customTemplate`：`否`
+- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `customTemplate`
 
 > 构建产物（打包输出）所在路径，支持目录、文件（相对于项目的路径）,会自动将产物移动到`Jenkinsfile`所在目录，方便制造镜像使用
 > 
 > 如果开启构建产物(stageArchiveArtifacts)，则该参数必填
 
+### <a id="buildNoCache">`buildNoCache`</a>
+
+- 类型：`Boolean`
+- 默认值：`false`
+- 必填：`否`
+- 支持模板：`javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
+
+> 是否不使用缓存层构建镜像，`Docker`从`Dockerfile`构建镜像时是否不使用缓存层构建镜像
+
 ### <a id="deployServer">`deployServer`</a>
 
 - 类型：`List<String>`
 - 默认值：无
-- 必填：`是`
-- 支持模板：`javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 必填：
+  - `javaDeployDocker`：`是`
+  - `nodeDeployDocker`：`是`
+  - `javaMultiDeployDocker`：`是`
+  - `customTemplate`：`否`
+- 支持模板：`javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > 部署服务器(第一个为默认值)，配置名称：Jenkins → 系统管理 → 系统配置 → SSH Servers → Name
 
@@ -299,7 +333,7 @@
 - 类型：`String`
 - 默认值：`SPRING_PROFILES_ACTIVE`
 - 必填：`否`
-- 支持模板：`javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 支持模板：`javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > 容器运行环境键，只能添加一个环境变量key=配置值，value=DEPLOY_ENV配置值，为了一条流水线支持多环境部署
 > 
@@ -310,7 +344,7 @@
 - 类型：`String`
 - 默认值：无
 - 必填：`否`
-- 支持模板：`javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 支持模板：`javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > 部署环境，写入容器启动时环境变量（`key`：`RUN_ENV_KEY`配置的值），影响打包、启动读取的环境配置，不配置，则不会添加环境变量
 > 
@@ -321,7 +355,7 @@
 - 类型：`Integer`
 - 默认值：无
 - 必填：`否`
-- 支持模板：`javaDeployDocker` `nodeDeployDocker`
+- 支持模板：`javaDeployDocker` `nodeDeployDocker` `customTemplate`
 
 > 部署默认端口，对外可访问端口，非容器内部端口。在流水线构建时还可以手动修改
 > 
@@ -333,8 +367,9 @@
 - 默认值：
   - `javaDeployDocker`：`8080`
   - `nodeDeployDocker`：`80`
+  - `customTemplate`：无
 - 必填：`否`
-- 支持模板：`javaDeployDocker` `nodeDeployDocker`
+- 支持模板：`javaDeployDocker` `nodeDeployDocker` `customTemplate`
 
 > 运行端口，容器内部访问端口
 
@@ -343,7 +378,7 @@
 - 类型：`String`
 - 默认值：`bridge`
 - 必填：`否`
-- 支持模板：`javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 支持模板：`javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > 网络模式，容器运行的网络模式，可选：`bridge` `host` `none` `overlay` 详解：[网络驱动模式](https://docs.docker.com/engine/network/drivers/)
 >
@@ -354,7 +389,7 @@
 - 类型：`String`
 - 默认值：`no`
 - 必填：`否`
-- 支持模板：`javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 支持模板：`javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > 容器重启策略，可选：`no` `on-failure` `always` `unless-stopped` 详解：[容器自动启动策略](https://docs.docker.com/engine/containers/start-containers-automatically/")
 
@@ -363,7 +398,7 @@
 - 类型：`Map`
 - 默认值：无
 - 必填：`否`
-- 支持模板：`javaDeployDocker` `nodeDeployDocker`
+- 支持模板：`javaDeployDocker` `nodeDeployDocker` `customTemplate`
 
 > 容器启动端口映射配置，格式：`host_port:container_port`，`host_port`为Map的key，`container_port`为Map的value
 
@@ -372,7 +407,7 @@
 - 类型：`Map`
 - 默认值：无
 - 必填：`否`
-- 支持模板：`javaDeployDocker` `nodeDeployDocker`
+- 支持模板：`javaDeployDocker` `nodeDeployDocker` `customTemplate`
 
 > 容器启动目录映射/挂载，格式：`host_dir:container_dir`，`host_dir`为Map的key，`container_dir`为Map的value
 
@@ -382,7 +417,7 @@
 - 类型：`String`，只能支持数字整数
 - 默认值：`60`
 - 必填：`否`
-- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > 构建超时时间，默认60分钟，针对于单个步骤的构建超时时间
 
@@ -391,7 +426,7 @@
 - 类型：`String`，只能支持数字整数
 - 默认值：无
 - 必填：`否`
-- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > 丢弃旧的构建，构建保留此天数，为空保留天数不限制
 
@@ -400,7 +435,7 @@
 - 类型：`String`，只能支持数字整数
 - 默认值：`15`
 - 必填：`否`
-- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > 丢弃旧的构建，构建保留个数，为空保留个数不限制，默认保留15个
 
@@ -409,7 +444,7 @@
 - 类型：`String`，只能支持数字整数
 - 默认值：无
 - 必填：`否`
-- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > 丢弃旧的构建，构建产物保留天数，为空保留天数不限制
 
@@ -418,7 +453,7 @@
 - 类型：`String`，只能支持数字整数
 - 默认值：`15`
 - 必填：`否`
-- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > 丢弃旧的构建，构建产物保留个数，为空保留个数不限制，默认保留15个
 
@@ -426,8 +461,14 @@
 
 - 类型：`String`
 - 默认值：无
-- 必填：`是`
-- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 必填：
+  - `javaBuildMaven`：`是`
+  - `nodeBuild`：`是`
+  - `javaDeployDocker`：`是`
+  - `nodeDeployDocker`：`是`
+  - `javaMultiDeployDocker`：`是`
+  - `customTemplate`：`否`
+- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > git代码仓库凭证，用于拉取待构建的代码仓库、pipeline脚本仓库
 
@@ -438,7 +479,8 @@
 - 必填：`否`
   - `imagePushRegistry`=`true`：`是`
   - `imagePullLogin`=`true`：`是`
-- 支持模板：`javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+  - `customTemplate`：`否`
+- 支持模板：`javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > Registry服务器（例如：`Harbor`）凭证，用于登录后拉取、推送镜像
 
@@ -447,7 +489,7 @@
 - 类型：`Boolean`
 - 默认值：`false`
 - 必填：`否`
-- 支持模板：`javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 支持模板：`javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > 是否推送镜像到Registry服务器（`true`：`registryAuth` `registryUrl` 必填；`false`：`imageTempSavePath` 必填）
 > 
@@ -462,7 +504,8 @@
 - 必填：`否`
   - `imagePushRegistry`=`true`：`是`
   - `imagePullLogin`=`true`：`是`
-- 支持模板：`javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+  - `customTemplate`：`否`
+- 支持模板：`javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > Docker镜像Registry服务器地址，用于登录Registry服务器、推送镜像
 > 
@@ -473,7 +516,7 @@
 - 类型：`Boolean`
 - 默认值：`false`
 - 必填：`否`
-- 支持模板：`javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 支持模板：`javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > 拉取镜像是否需要登录（`true`：`registryAuth` `registryUrl` 必填）
 
@@ -481,8 +524,12 @@
 
 - 类型：`String`
 - 默认值：无
-- 必填：`是`
-- 支持模板：`javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 必填：
+  - `javaDeployDocker`：`是`
+  - `nodeDeployDocker`：`是`
+  - `javaMultiDeployDocker`：`是`
+  - `customTemplate`：`否`
+- 支持模板：`javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > Registry服务器项目，用于推送镜像到Registry项目
 
@@ -491,7 +538,7 @@
 - 类型：`String`
 - 默认值：`siweite-pipeline-image`
 - 必填：`否`
-- 支持模板：`javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 支持模板：`javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > 远端部署服务器镜像临时保存相对路径（当`imagePushRegistry`=`false`时使用）
 >
@@ -504,7 +551,7 @@
 - 类型：`List<String>`
 - 默认值：无
 - 必填：`否`
-- 支持模板：`javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 支持模板：`javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > 需要使用到的基础镜像，只有新版Docker-Engine才需要配置
 > 
@@ -519,7 +566,7 @@
 - 类型：`List<String>`
 - 默认值：无
 - 必填：`否`
-- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > 通知方式，可选：`Feishu` `DingTalk` `QyWechat` **TODO 暂不支持企业微信**
 
@@ -536,8 +583,10 @@
 
 - 类型：`Map<Map>`
 - 默认值：无
-- 必填：`是`
-- 支持模板：`javaMultiDeployDocker`
+- 必填：
+  - `javaMultiDeployDocker`：`是`
+  - `customTemplate`：`否`
+- 支持模板：`javaMultiDeployDocker` `customTemplate`
 
 > 多项目构建部署配置，单独为每一个需要部署的项目进行配置
 > 
@@ -569,7 +618,7 @@
 - 类型：`boolean`
 - 默认值：`false`
 - 必填：`否`
-- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > 是否开启构建产物-步骤（开启后，支持下载打包后的产物）
 
@@ -578,6 +627,6 @@
 - 类型：`boolean`
 - 默认值：`false`
 - 必填：`否`
-- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker`
+- 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
 > 是否开启通知消息-步骤（开启后，流水线失败或成功都会发送通知消息）

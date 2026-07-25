@@ -39,7 +39,7 @@ def call(BuildArgsModel buildArgs) {
             // 项目分支参数
             string name: 'DEPLOY_BRANCH', defaultValue: buildArgs.gitCodeBranch, description: '选择需要部署项目的分支'
             // 部署服务器
-            choice name: 'DEPLOY_SERVER', choices: buildArgs.deployServer, description: '选择需要部署服务器'
+            choice name: 'DEPLOY_SERVERS', choices: buildArgs.deployServer, description: '选择需要部署服务器'
             // 部署项目
             choice name: 'DEPLOY_PROJECTS', choices: deployProjects, description: '请选择需要部署的项目'
             // 构建模式：发布 或 回滚
@@ -58,14 +58,20 @@ def call(BuildArgsModel buildArgs) {
             stage('清理缓存') {
                 steps {
                     script {
-                        // 计算需要部署的项目,以数组展示
+                        // 计算需要部署的服务器器，以数组展示
+                        globalVars['DEPLOY_SERVERS'] = "${params.DEPLOY_SERVERS}".split(',')
+                        // 校验必须存在一个及以上待部署项目
+                        if (!globalVars['DEPLOY_SERVERS'] || globalVars['DEPLOY_SERVERS'].size() == 0) {
+                            error '部署服务器 [DEPLOY_SERVERS] 构建参数必选'
+                        }
+
+                        // 计算需要部署的项目，以数组展示
                         globalVars['DEPLOY_PROJECTS'] = "${params.DEPLOY_PROJECTS}".split(',')
                         def isAll = globalVars['DEPLOY_PROJECTS'].contains("all");
                         if (isAll) {
                             globalVars['DEPLOY_PROJECTS'] = deployProjects
                             globalVars['DEPLOY_PROJECTS'].remove("all")
                         }
-
                         // 校验必须存在一个及以上待部署项目
                         if (!globalVars['DEPLOY_PROJECTS'] || globalVars['DEPLOY_PROJECTS'].size() == 0) {
                             error '部署项目 [DEPLOY_PROJECTS] 构建参数必选'
@@ -205,7 +211,6 @@ def call(BuildArgsModel buildArgs) {
             stage('部署应用') {
                 steps {
                     script {
-                        println "开始部署"
                         def remoteDirectory = buildArgs.imagePushRegistry ? '' : buildArgs.imageTempSavePath
                         globalVars['SOURCE_FILES'] = []
                         // 对所有部署项目进行远程部署
@@ -222,22 +227,24 @@ def call(BuildArgsModel buildArgs) {
                             globalVars['SOURCE_FILES'].add(sourceFiles)
 
                             // 向部署服务器发送部署指令
-                            if (buildArgs.imagePullLogin) {
-                                withCredentials([usernamePassword(credentialsId: "${buildArgs.registryAuth}", passwordVariable: 'password', usernameVariable: 'username')]) {
-                                    sshPublisher(publishers: [sshPublisherDesc(configName: "${params.DEPLOY_SERVER}", transfers: [sshTransfer(cleanRemote: false, excludes: '',
-                                            execCommand: """
-                                            docker login -u ${username} -p ${password} ${buildArgs.registryUrl}
-                                            ${globalVars['DEPLOY_COMMAND']}
-                                            docker logout ${buildArgs.registryUrl}
-                                        """,
+                            globalVars['DEPLOY_SERVERS'].each { deployServer ->
+                                if (buildArgs.imagePullLogin) {
+                                    withCredentials([usernamePassword(credentialsId: "${buildArgs.registryAuth}", passwordVariable: 'password', usernameVariable: 'username')]) {
+                                        sshPublisher(publishers: [sshPublisherDesc(configName: "${deployServer}", transfers: [sshTransfer(cleanRemote: false, excludes: '',
+                                                execCommand: """
+                                                docker login -u ${username} -p ${password} ${buildArgs.registryUrl}
+                                                ${globalVars['DEPLOY_COMMAND']}
+                                                docker logout ${buildArgs.registryUrl}
+                                            """,
+                                                execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: "${remoteDirectory}",
+                                                remoteDirectorySDF: false, removePrefix: '', sourceFiles: "${sourceFiles}")], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: buildArgs.debug)])
+                                    }
+                                } else {
+                                    sshPublisher(publishers: [sshPublisherDesc(configName: "${deployServer}", transfers: [sshTransfer(cleanRemote: false, excludes: '',
+                                            execCommand: "${globalVars['DEPLOY_COMMAND']}",
                                             execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: "${remoteDirectory}",
                                             remoteDirectorySDF: false, removePrefix: '', sourceFiles: "${sourceFiles}")], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: buildArgs.debug)])
                                 }
-                            } else {
-                                sshPublisher(publishers: [sshPublisherDesc(configName: "${params.DEPLOY_SERVER}", transfers: [sshTransfer(cleanRemote: false, excludes: '',
-                                        execCommand: "${globalVars['DEPLOY_COMMAND']}",
-                                        execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: "${remoteDirectory}",
-                                        remoteDirectorySDF: false, removePrefix: '', sourceFiles: "${sourceFiles}")], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: buildArgs.debug)])
                             }
                         }
                     }
@@ -261,7 +268,7 @@ def call(BuildArgsModel buildArgs) {
                         if (params.DEPLOY_MODE == "DEPLOY") {
                             buildName "#${env.BUILD_ID}-${params.DEPLOY_BRANCH}-${env.BUILD_USER}"
                             buildDescription("""提交用户: ${globalVars['CODE_COMMIT_USER']}
-                                |运行服务器: ${params.DEPLOY_SERVER}
+                                |运行服务器: ${params.DEPLOY_SERVERS}
                                 |提交SHA: ${globalVars['CODE_COMMIT_SHA']}
                                 |提交时间: ${globalVars['CODE_COMMIT_TIME']}
                                 |提交内容: ${globalVars['CODE_COMMIT_INFO']}""".stripMargin())

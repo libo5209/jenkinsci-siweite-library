@@ -70,13 +70,14 @@
 
 ### 2.1 支持模板
 
-| 标题                | 模板使用方法                                  | 阶段/步骤说明(`[]`：可选、`<>`：必选、`{}`：选项必选)                                 |
-|:------------------|:----------------------------------------|:-------------------------------------------------------------------|
-| Java Maven编译打包    | `SiweiteCI.javaBuildMaven(args)`        | [清理缓存]→[仓库合并]→<项目编译>→<制作产物>→[发送通知]                                 |
-| Node 编译打包         | `SiweiteCI.nodeBuild(args)`             | [清理缓存]→[仓库合并]→<项目编译>→<制作产物>→[发送通知]                                 |
-| Java Docker部署     | `SiweiteCI.javaDeployDocker(args)`      | [清理缓存]→[仓库合并]→<项目编译>→<覆盖配置>→[制作产物]→<制作镜像>→{推送私服\|传输镜像}→部署容器→[发送通知] |
-| Node Docker部署     | `SiweiteCI.nodeDeployDocker(args)`      | [清理缓存]→[仓库合并]→<项目编译>→<覆盖配置>→[制作产物]→<制作镜像>→{推送私服\|传输镜像}→部署容器→[发送通知] |
-| Java 多项目 Docker部署 | `SiweiteCI.javaMultiDeployDocker(args)` | [清理缓存]→[仓库合并]→<项目编译>→<覆盖配置>→[制作产物]→<制作镜像>→{推送私服\|传输镜像}→部署容器→[发送通知] |
+| 标题                   | 模板使用方法                                         | 阶段/步骤说明(`[]`：可选、`<>`：必选、`{}`：选项必选)                                                      |
+|:-----------------------|:-----------------------------------------------------|:-----------------------------------------------------------------------------------------------------------|
+| Java Maven编译打包     | `SiweiteCI.javaBuildMaven(args)`                     | [清理缓存]→[仓库合并]→<项目编译>→<制作产物>→[发送通知]                                                     |
+| Node 编译打包          | `SiweiteCI.nodeBuild(args)`                          | [清理缓存]→[仓库合并]→<项目编译>→<制作产物>→[发送通知]                                                     |
+| Java Docker部署        | `SiweiteCI.javaDeployDocker(args)`                   | [清理缓存]→[仓库合并]→<项目编译>→<覆盖配置>→[制作产物]→<制作镜像>→{推送私服\|传输镜像}→部署容器→[发送通知] |
+| Node Docker部署        | `SiweiteCI.nodeDeployDocker(args)`                   | [清理缓存]→[仓库合并]→<项目编译>→<覆盖配置>→[制作产物]→<制作镜像>→{推送私服\|传输镜像}→部署容器→[发送通知] |
+| Java 多项目 Docker部署 | `SiweiteCI.javaMultiDeployDocker(args)`              | [清理缓存]→[仓库合并]→<项目编译>→<覆盖配置>→[制作产物]→<制作镜像>→{推送私服\|传输镜像}→部署容器→[发送通知] |
+| 自定义模版             | `SiweiteCI.customTemplate(args, "自定义共享库类名")` | 无强制限制阶段/步骤，按自己项目特性封装步骤，达到可复用（可参照上述共享库进行自定义模版开发）              |
 
 
 ### 2.2 流水线示例
@@ -84,7 +85,7 @@
 - Java发布私仓流水线配置
 
 ```groovy
-@Library('jenkinsci-siweite-library@0.6.0') _
+@Library('jenkinsci-siweite-library@0.6.2') _
 
 // 控制参数
 def args = [
@@ -116,7 +117,7 @@ SiweiteCI.javaBuildMaven(args)
 - SpringBoot项目流水线配置
 
 ```groovy
-@Library('jenkinsci-siweite-library@0.6.0') _
+@Library('jenkinsci-siweite-library@0.6.2') _
 
 // 控制参数
 def args = [
@@ -163,7 +164,7 @@ SiweiteCI.javaDeployDocker(args)
 - SpringCloud项目流水线配置
 
 ```groovy
-@Library('jenkinsci-siweite-library@0.6.0') _
+@Library('jenkinsci-siweite-library@0.6.2') _
 
 // 控制参数
 def args = [
@@ -213,7 +214,7 @@ SiweiteCI.javaMultiDeployDocker(args)
 - Solon项目流水线配置
 
 ```groovy
-@Library('jenkinsci-siweite-library@0.6.0') _
+@Library('jenkinsci-siweite-library@0.6.2') _
 
 // 控制参数
 def args = [
@@ -262,7 +263,7 @@ SiweiteCI.javaDeployDocker(args)
 - Node项目流水线配置
 
 ```groovy
-@Library('jenkinsci-siweite-library@0.6.0') _
+@Library('jenkinsci-siweite-library@0.6.2') _
 
 // 控制参数
 def args = [

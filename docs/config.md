@@ -9,14 +9,14 @@
 
 > 安装依赖的`Jenkins`插件
 
- | 标题                                | 名称               | 是否必须                 |
- |-----------------------------------|------------------|----------------------|
- | Pipeline                          | pipeline流水线插件    | 是                    |
- | build user vars plugin            | 获取构建用户环境变量       | 是                    |
- | Build Name and Description Setter | 设置构建显示名称和描述      | 是                    |
+ | 标题                              | 名称                         | 是否必须                                |
+ |-----------------------------------|------------------------------|-----------------------------------------|
+ | Pipeline                          | pipeline流水线插件           | 是                                      |
+ | build user vars plugin            | 获取构建用户环境变量         | 是                                      |
+ | Build Name and Description Setter | 设置构建显示名称和描述       | 是                                      |
  | lark-notice                       | lark、飞书、钉钉消息通知插件 | 否（启用消息通知-步骤，必须安装此插件） |
- | Pipeline: Stage View              | pipeline阶段视图插件   | 否                    |
- | Pipeline Graph View               | pipeline流水线可视化插件 | 否                    |
+ | Pipeline: Stage View              | pipeline阶段视图插件         | 否                                      |
+ | Pipeline Graph View               | pipeline流水线可视化插件     | 否                                      |
 
 ## 二 安装`Siweite Pipeline Template`插件
 
