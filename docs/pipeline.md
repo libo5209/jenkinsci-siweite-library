@@ -43,7 +43,7 @@ siweite-pipeline - 仓库名称
 
 1. 示例：
     ```groovy
-    @Library('jenkinsci-siweite-library@0.6.2') _
+    @Library('jenkinsci-siweite-library@0.6.3') _
     // 控制参数
     def args = [
         // 部署项目名称
@@ -62,7 +62,7 @@ siweite-pipeline - 仓库名称
     // 运行流水线[Java发布私仓]
     SiweiteCI.javaBuildMaven(args)
     ```
-2. `@Library('jenkinsci-siweite-library@0.6.2') _`
+2. `@Library('jenkinsci-siweite-library@0.6.3') _`
    > 引入共享库，流水线模板库
    >
    > 格式：@Library('共享仓库配置名称@仓库分支/仓库标签') _

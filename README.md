@@ -85,7 +85,7 @@
 - Java发布私仓流水线配置
 
 ```groovy
-@Library('jenkinsci-siweite-library@0.6.2') _
+@Library('jenkinsci-siweite-library@0.6.3') _
 
 // 控制参数
 def args = [
@@ -117,7 +117,7 @@ SiweiteCI.javaBuildMaven(args)
 - SpringBoot项目流水线配置
 
 ```groovy
-@Library('jenkinsci-siweite-library@0.6.2') _
+@Library('jenkinsci-siweite-library@0.6.3') _
 
 // 控制参数
 def args = [
@@ -164,7 +164,7 @@ SiweiteCI.javaDeployDocker(args)
 - SpringCloud项目流水线配置
 
 ```groovy
-@Library('jenkinsci-siweite-library@0.6.2') _
+@Library('jenkinsci-siweite-library@0.6.3') _
 
 // 控制参数
 def args = [
@@ -214,7 +214,7 @@ SiweiteCI.javaMultiDeployDocker(args)
 - Solon项目流水线配置
 
 ```groovy
-@Library('jenkinsci-siweite-library@0.6.2') _
+@Library('jenkinsci-siweite-library@0.6.3') _
 
 // 控制参数
 def args = [
@@ -263,7 +263,7 @@ SiweiteCI.javaDeployDocker(args)
 - Node项目流水线配置
 
 ```groovy
-@Library('jenkinsci-siweite-library@0.6.2') _
+@Library('jenkinsci-siweite-library@0.6.3') _
 
 // 控制参数
 def args = [
