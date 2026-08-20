@@ -65,7 +65,7 @@ def call() {
                 ]
         )
     } else if (env.SWT_NOTIFY_TYPE == "QyWechat") {
-        WechatWork(
+        wechatWork(
                 robot: "${env.SWT_NOTIFY_ROBOT_ID}",
                 type: 'CARD',
                 title: "📢 ${statusIcon}${statusLabel}，智能通知系统部署：",
