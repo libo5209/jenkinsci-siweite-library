@@ -70,11 +70,11 @@ def call() {
                 type: 'MARKDOWN',
                 title: "📢 ${statusIcon}${statusLabel}，智能通知系统部署：",
                 text: [
-                        "📋 **项目名称**: ${env.SWT_PROJECT_TITLE} \n",
-                        "🏷️ **项目标识**: ${env.SWT_PROJECT_NAME} \n",
-                        "🌟 **构建状态**: <font color='${statusColor}'>${statusLabel}</font> \n",
-                        "🕐 **构建耗时**: ${duration} \n",
-                        "👤 **构建人员**: ${env.BUILD_USER} \n"
+                        ">📋 **项目名称**: ${env.SWT_PROJECT_TITLE} \n",
+                        ">🏷️ **项目标识**: ${env.SWT_PROJECT_NAME} \n",
+                        ">🌟 **构建状态**: <font color='${statusColor}'>${statusLabel}</font> \n",
+                        ">🕐 **构建耗时**: ${duration} \n",
+                        ">👤 **构建人员**: ${env.BUILD_USER} \n"
                 ]
         )
     } else {
