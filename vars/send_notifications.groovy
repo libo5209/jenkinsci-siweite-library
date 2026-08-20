@@ -64,7 +64,27 @@ def call() {
                         ]
                 ]
         )
+    } else if (env.SWT_NOTIFY_TYPE == "WechatWork") {
+        dingTalk(
+                robot: "${env.SWT_NOTIFY_ROBOT_ID}",
+                type: 'CARD',
+                title: "📢 ${statusIcon}${statusLabel}，智能通知系统部署：",
+                text: [
+                        "📋 **项目名称**: ${env.SWT_PROJECT_TITLE} \n",
+                        "🏷️ **项目标识**: ${env.SWT_PROJECT_NAME} \n",
+                        "🌟 **构建状态**: <font color='${statusColor}'>${statusLabel}</font> \n",
+                        "🕐 **构建耗时**: ${duration} \n",
+                        "👤 **构建人员**: ${env.BUILD_USER} \n"
+                ],
+                buttons: [
+                        [
+                                title: "${noticeButtonName}",
+                                type: "${noticeButtonType}",
+                                url: "${noticeButtonUrl}"
+                        ]
+                ]
+        )
     } else {
-        println "未知消息通知类型：${env.SWT_NOTIFY_TYPE}，目前只支持 [Feishu、DingTalk]"
+        println "未知消息通知类型：${env.SWT_NOTIFY_TYPE}，目前只支持 [Feishu、DingTalk、WechatWork]"
     }
 }
