@@ -64,8 +64,8 @@ def call() {
                         ]
                 ]
         )
-    } else if (env.SWT_NOTIFY_TYPE == "WechatWork") {
-        dingTalk(
+    } else if (env.SWT_NOTIFY_TYPE == "QyWechat") {
+        WechatWork(
                 robot: "${env.SWT_NOTIFY_ROBOT_ID}",
                 type: 'CARD',
                 title: "📢 ${statusIcon}${statusLabel}，智能通知系统部署：",
@@ -85,6 +85,6 @@ def call() {
                 ]
         )
     } else {
-        println "未知消息通知类型：${env.SWT_NOTIFY_TYPE}，目前只支持 [Feishu、DingTalk、WechatWork]"
+        println "未知消息通知类型：${env.SWT_NOTIFY_TYPE}，目前只支持 [Feishu、DingTalk、QyWechat]"
     }
 }

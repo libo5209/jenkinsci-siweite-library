@@ -568,7 +568,7 @@
 - 必填：`否`
 - 支持模板：`javaBuildMaven` `nodeBuild` `javaDeployDocker` `nodeDeployDocker` `javaMultiDeployDocker` `customTemplate`
 
-> 通知方式，可选：`Feishu` `DingTalk` `QyWechat` **TODO 暂不支持企业微信**
+> 通知方式，可选：`Feishu` `DingTalk` `QyWechat`，依赖于插件`lark-notice`(版本>=`2.1.9`才支持企业微信)
 
 ### <a id="notifyRobotId">`notifyRobotId`</a>
 
